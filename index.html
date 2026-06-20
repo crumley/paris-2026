@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Paris &amp; Chartres · July 2026 — Working Schedule</title>
+<style>
+  :root{
+    --ink:#22242a; --muted:#717784; --bg:#f7f6f2; --card:#fff; --line:#e7e3da;
+    --seg0:#2f6fdb; --seg1:#2e9e5b; --seg2:#8a5cd1;
+    --pencil:#c9821a; --tbd:#b23b4e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.5}
+  .wrap{max-width:860px;margin:0 auto;padding:26px 18px 70px}
+  h1{margin:0 0 6px;font-size:1.6rem;letter-spacing:-.01em}
+  .sub{color:var(--muted);margin:0 0 4px;font-size:.97rem}
+  .toplinks{margin:14px 0 4px}
+  .toplinks a{display:inline-block;font-size:.85rem;font-weight:600;text-decoration:none;
+    background:#22242a;color:#fff;padding:8px 13px;border-radius:9px}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin:16px 0 6px;font-size:.85rem;color:var(--muted)}
+  .legend b{color:var(--ink)}
+  /* open-decisions box */
+  .decisions{background:#fff;border:1px solid var(--line);border-left:4px solid var(--tbd);
+    border-radius:12px;padding:14px 18px;margin:18px 0 26px}
+  .decisions h2{margin:0 0 8px;font-size:1rem}
+  .decisions ul{margin:0;padding-left:20px}
+  .decisions li{margin:4px 0;font-size:.92rem}
+  /* segment header */
+  .seg{display:flex;align-items:center;gap:10px;margin:26px 0 10px;font-weight:700;font-size:1.05rem}
+  .seg .bar{width:10px;height:10px;border-radius:50%}
+  .seg .dates{font-weight:500;color:var(--muted);font-size:.85rem}
+  /* day card */
+  .day{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 16px;
+    margin:0 0 10px;border-left:4px solid #ccc}
+  .day .head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .day .date{font-weight:700;font-size:1.02rem}
+  .day .flag{font-size:.82rem;font-weight:700;color:var(--pencil)}
+  .day .base{font-size:.8rem;color:var(--muted)}
+  .row{display:flex;gap:8px;margin-top:8px;font-size:.94rem;align-items:flex-start}
+  .row .k{flex:0 0 64px;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.03em;padding-top:2px}
+  .row .v{flex:1}
+  .v a{color:inherit;font-weight:600}
+  .tag{display:inline-block;font-size:.68rem;font-weight:700;border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:middle;color:#fff}
+  .tag.set{background:var(--seg1)} .tag.pencil{background:var(--pencil)} .tag.tbd{background:var(--tbd)} .tag.info{background:#9aa0ab}
+  .adhoc{color:var(--muted);font-size:.85rem}
+  .todos{margin:8px 0 0;padding-left:0;list-style:none}
+  .todos li{font-size:.86rem;color:#55606e;margin:3px 0}
+  .todos li::before{content:"❓ ";}
+  footer{color:var(--muted);font-size:.8rem;margin-top:28px;border-top:1px solid var(--line);padding-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🇫🇷 Paris &amp; Chartres · July 2026</h1>
+  <p class="sub">Working schedule — anchored on <b>activity + dinner</b>. Breakfast &amp; lunch stay ad-hoc (we'll pick from the food map in the moment).</p>
+  <p class="sub">Nothing here is locked except where marked. Tell me what to pin down and I'll update it.</p>
+  <div class="toplinks"><a href="https://crumley.github.io/paris-gf-dining/" target="_blank" rel="noopener">🥐 Gluten-free dining map →</a></div>
+
+  <div class="legend">
+    <span><span class="tag set">SET</span> booked / decided</span>
+    <span><span class="tag pencil">PENCILED</span> earmarked, not locked</span>
+    <span><span class="tag tbd">TO DECIDE</span> open</span>
+  </div>
+
+  <div class="decisions">
+    <h2>🎯 Biggest things to figure out</h2>
+    <ul id="decisions"></ul>
+  </div>
+
+  <div id="schedule"></div>
+
+  <footer>
+    Unlisted working doc for trip planning · not indexed. Hotel names included for planning; flight/booking details left off.
+    Say the word and I can make it private or take it down.
+  </footer>
+</div>
+
+<script>
+const SEG = [
+  { name:"Paris · 7th", hotel:"Hôtel Bourgogne &amp; Montana", dates:"Jul 12–15", color:"var(--seg0)" },
+  { name:"Chartres countryside", hotel:"Orangerie d'Esclimont (Airbnb)", dates:"Jul 16–21", color:"var(--seg1)" },
+  { name:"Paris · 1st", hotel:"Grand Hôtel du Palais Royal", dates:"Jul 21–23", color:"var(--seg2)" },
+];
+
+const DECISIONS = [
+  "Reserve <b>Le Florimond</b> (Jul 13) &amp; <b>Su Misura</b> (Jul 14, Bastille) for the group — both small, both book out.",
+  "<b>Bastille Day plan</b> (Jul 14): doing the parade? where do we watch the Eiffel fireworks (Champ de Mars fills early + crowd control)?",
+  "<b>Seine boat (Jul 15):</b> confirm the time and whether it's a dinner cruise — that decides the Jul 15 dinner.",
+  "<b>Lodging gap:</b> confirm where we sleep the night of Jul 15 (Stay 1 is listed as 3 nights / checkout the 15th, but we don't leave for Chartres until the 16th).",
+  "<b>Chartres (5 days):</b> activities are wide open — cathedral + château grounds, plus possible day trips (Versailles, Giverny, a Loire château?).",
+  "<b>Rental car</b> for the Chartres/Esclimont stretch (Jul 16–21).",
+  "<b>Final Paris dinner</b> (Jul 22) — make it a good send-off?",
+];
+
+const DAYS = [
+  { date:"Sat Jul 11", seg:0, base:"Overnight flight",
+    activity:{t:"Travel day — depart Austin, overnight to CDG", s:"info"},
+    dinner:{t:"On board", s:"info"}, adhoc:false, todos:[] },
+
+  { date:"Sun Jul 12", seg:0,
+    activity:{t:"Arrive CDG ~12:35pm, settle into the 7th", s:"set"},
+    dinner:{t:"Easy first night near the hotel — Noglu is the safe GF pick close by", s:"tbd"},
+    adhoc:true, todos:["CDG → hotel transfer (taxi flat fare vs RER)", "Pick a low-key arrival dinner"] },
+
+  { date:"Mon Jul 13", seg:0,
+    activity:{t:"First full Paris day — pick a headline sight (Musée d'Orsay is steps away)", s:"tbd"},
+    dinner:{t:"Le Florimond", s:"pencil", link:"http://www.leflorimond.com/"},
+    adhoc:true, todos:["Choose the day's activity (Orsay / Eiffel / Louvre)", "Reserve Le Florimond for the group"] },
+
+  { date:"Tue Jul 14", seg:0, flag:"🎆 Bastille Day",
+    activity:{t:"Bastille Day — morning military parade on the Champs-Élysées, fireworks at the Eiffel (~11pm)", s:"tbd"},
+    dinner:{t:"Su Misura by Ciro — by the Champ de Mars, walkable to the fireworks", s:"pencil", link:"https://byciro.com/index.php/en/our-restaurants/sumisura"},
+    adhoc:true, todos:["Parade or skip the crowds?", "Pick a fireworks viewing spot (Champ de Mars fills early)", "Reserve Su Misura early — Bastille night books out"] },
+
+  { date:"Wed Jul 15", seg:0,
+    activity:{t:"Seine boat ride", s:"set"},
+    dinner:{t:"Tie to the boat — is it a dinner cruise? If not, dinner near the Seine", s:"tbd"},
+    adhoc:true, todos:["Confirm boat time + dinner-cruise or not", "Confirm lodging for the night of the 15th"] },
+
+  { date:"Thu Jul 16", seg:1,
+    activity:{t:"Train Paris → Chartres (~1 hr), drive to the Esclimont Airbnb — cathedral on arrival?", s:"tbd"},
+    dinner:{t:"Rural — cook at the Airbnb, or dine in Chartres / at Château d'Esclimont", s:"tbd"},
+    adhoc:false, todos:["Rental car pickup (needed for this stretch)", "Grocery run for Airbnb breakfasts", "Chartres Cathedral timing"] },
+
+  { date:"Fri Jul 17", seg:1,
+    activity:{t:"Open — Chartres / countryside day", s:"tbd"},
+    dinner:{t:"TBD", s:"tbd"}, adhoc:false,
+    todos:["Pick an activity (Chartres old town, château grounds, or a day trip?)"] },
+
+  { date:"Sat Jul 18", seg:1,
+    activity:{t:"Open", s:"tbd"}, dinner:{t:"TBD", s:"tbd"}, adhoc:false, todos:[] },
+
+  { date:"Sun Jul 19", seg:1,
+    activity:{t:"Open", s:"tbd"}, dinner:{t:"TBD", s:"tbd"}, adhoc:false, todos:[] },
+
+  { date:"Mon Jul 20", seg:1,
+    activity:{t:"Open", s:"tbd"}, dinner:{t:"TBD", s:"tbd"}, adhoc:false, todos:[] },
+
+  { date:"Tue Jul 21", seg:2,
+    activity:{t:"Chartres ends — train back to Paris, settle into the 1st (Palais Royal)", s:"tbd"},
+    dinner:{t:"Near Palais Royal — Copains Opéra & Judy Rousseau are GF nearby", s:"tbd"},
+    adhoc:true, todos:["Return rental car", "Train back to Paris"] },
+
+  { date:"Wed Jul 22", seg:2,
+    activity:{t:"Last full day — relaxed (Palais Royal, Louvre, shopping?)", s:"tbd"},
+    dinner:{t:"Final Paris dinner — make it a good one?", s:"tbd"},
+    adhoc:true, todos:["Pick the final-night dinner", "Any must-do left before we fly?"] },
+
+  { date:"Thu Jul 23", seg:2,
+    activity:{t:"Depart — checkout ~8:30am, taxi to CDG (flight ~12:25pm)", s:"set"},
+    dinner:{t:"Home", s:"info"}, adhoc:false, todos:["Pre-book CDG taxi (flat fare) for 4 + luggage"] },
+];
+
+const TAGTXT = {set:"SET", pencil:"PENCILED", tbd:"TO DECIDE", info:""};
+
+// decisions
+document.getElementById('decisions').innerHTML = DECISIONS.map(d=>`<li>${d}</li>`).join('');
+
+// schedule grouped by segment
+const host = document.getElementById('schedule');
+let curSeg = -1;
+DAYS.forEach(d => {
+  if (d.seg !== curSeg) {
+    curSeg = d.seg;
+    const s = SEG[d.seg];
+    const h = document.createElement('div');
+    h.className = 'seg';
+    h.innerHTML = `<span class="bar" style="background:${s.color}"></span>${s.name}
+      <span class="dates">· ${s.hotel} · ${s.dates}</span>`;
+    host.appendChild(h);
+  }
+  const s = SEG[d.seg];
+  const tag = t => TAGTXT[t] ? `<span class="tag ${t}">${TAGTXT[t]}</span>` : '';
+  const dinnerV = d.dinner.link
+    ? `<a href="${d.dinner.link}" target="_blank" rel="noopener">${d.dinner.t} ↗</a>`
+    : d.dinner.t;
+  const el = document.createElement('div');
+  el.className = 'day';
+  el.style.borderLeftColor = s.color;
+  el.innerHTML =
+    `<div class="head">
+       <span class="date">${d.date}${d.flag?` <span class="flag">${d.flag}</span>`:''}</span>
+       <span class="base">${s.name}</span>
+     </div>
+     <div class="row"><div class="k">Activity</div><div class="v">${d.activity.t} ${tag(d.activity.s)}</div></div>
+     <div class="row"><div class="k">Dinner</div><div class="v">${dinnerV} ${tag(d.dinner.s)}</div></div>` +
+    (d.adhoc ? `<div class="row"><div class="k">B&amp;L</div><div class="v adhoc">Breakfast &amp; lunch ad-hoc — <a href="https://crumley.github.io/paris-gf-dining/" target="_blank" rel="noopener">food map</a></div></div>` : '') +
+    (d.todos.length ? `<ul class="todos">${d.todos.map(t=>`<li>${t}</li>`).join('')}</ul>` : '');
+  host.appendChild(el);
+});
+</script>
+</body>
+</html>
