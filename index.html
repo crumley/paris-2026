@@ -9,7 +9,7 @@
   :root{
     --ink:#22242a; --muted:#717784; --bg:#f7f6f2; --card:#fff; --line:#e7e3da;
     --seg0:#2f6fdb; --seg1:#2e9e5b; --seg2:#8a5cd1;
-    --pencil:#c9821a; --tbd:#b23b4e;
+    --pencil:#c9821a; --tbd:#b23b4e; --wait:#0f8a8a;
   }
   *{box-sizing:border-box}
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
@@ -44,7 +44,7 @@
   .act{margin-bottom:5px} .act:last-child{margin-bottom:0}
   .anote{color:var(--muted);font-size:.82rem}
   .tag{display:inline-block;font-size:.68rem;font-weight:700;border-radius:999px;padding:1px 7px;margin-left:4px;vertical-align:middle;color:#fff}
-  .tag.set{background:var(--seg1)} .tag.pencil{background:var(--pencil)} .tag.tbd{background:var(--tbd)} .tag.info{background:#9aa0ab}
+  .tag.set{background:var(--seg1)} .tag.pencil{background:var(--pencil)} .tag.tbd{background:var(--tbd)} .tag.wait{background:var(--wait)} .tag.info{background:#9aa0ab}
   .adhoc{color:var(--muted);font-size:.85rem}
   .todos{margin:8px 0 0;padding-left:0;list-style:none}
   .todos li{font-size:.86rem;color:#55606e;margin:3px 0}
@@ -62,6 +62,7 @@
   <div class="legend">
     <span><span class="tag set">SET</span> booked / decided</span>
     <span><span class="tag pencil">PENCILED</span> earmarked, not locked</span>
+    <span><span class="tag wait">WAITLISTED</span> request in, not confirmed</span>
     <span><span class="tag tbd">TO DECIDE</span> open</span>
   </div>
 
@@ -97,7 +98,7 @@ const PINNED = [
 const DECISIONS = [
   "⏰ <b>Book skip-the-line tickets now</b> wherever available — Musée d'Orsay, catacombs, any Louvre/major sights sell out in July.",
   "⛪ <b>Confirm the Notre-Dame tour day</b> — likely the 14th; with fireworks now on the 13th, the 14th afternoon (after the parade) is a clean slot.",
-  "Reserve <b>Le Florimond</b> (Jul 13) &amp; <b>Su Misura</b> (Jul 14) for the group — both small, both book out.",
+  "Reserve <b>Le Florimond</b> (Jul 13). <b>Su Misura</b> (Jul 14) is on the waitlist (7pm, party of 7) — line up a gluten-free backup in case it doesn't clear.",
   "<b>Fireworks moved to Jul 13</b> this year (Eiffel ~11pm, Champ de Mars/Trocadéro) — the parade + flyover are still Jul 14 at 10am. Pick a viewing spot for the 13th; get to the Champs-Élysées early on the 14th.",
   "<b>Jul 15:</b> busy day — Matisse at the Grand Palais (11:30am) + Seine cruise (7pm) → just need a riverside dinner after.",
   "<b>Chartres (5 days):</b> activities wide open — cathedral + château grounds, plus possible day trips (Versailles, Giverny, a Loire château?).",
@@ -128,8 +129,8 @@ const DAYS = [
       {t:"Bastille Day — parade + military flyover from 10:00am (Arc de Triomphe → Place de la Concorde)", s:"tbd"},
       {t:"Notre-Dame guided tour", s:"set", note:"booked — day to confirm; the afternoon's now free (fireworks moved to the 13th)"}
     ],
-    dinner:{t:"Su Misura by Ciro — fully gluten-free Italian near the Champ de Mars", s:"pencil", link:"https://byciro.com/index.php/en/our-restaurants/sumisura"},
-    adhoc:true, todos:["Stake out a Champs-Élysées spot early for the 10am parade + flyover (crowds + security form well before)","Notre-Dame tour fits the 14th afternoon nicely now — confirm the booked day","Reserve Su Misura for the group"] },
+    dinner:{t:"Su Misura by Ciro — fully gluten-free Italian near the Champ de Mars", s:"wait", note:"on the waitlist — Tue Jul 14, 7:00pm, party of 7", link:"https://byciro.com/index.php/en/our-restaurants/sumisura"},
+    adhoc:true, todos:["Stake out a Champs-Élysées spot early for the 10am parade + flyover (crowds + security form well before)","Notre-Dame tour fits the 14th afternoon nicely now — confirm the booked day","Su Misura is waitlisted (Tue 7pm, party of 7) — watch for the confirmation + keep a GF backup ready"] },
 
   { date:"Wed Jul 15", seg:0,
     acts:[
@@ -168,7 +169,7 @@ const DAYS = [
     dinner:{t:"Home", s:"info"}, adhoc:false, todos:["Pre-book CDG taxi (flat fare) for 4 + luggage"] },
 ];
 
-const TAGTXT = {set:"SET", pencil:"PENCILED", tbd:"TO DECIDE", info:""};
+const TAGTXT = {set:"SET", pencil:"PENCILED", wait:"WAITLISTED", tbd:"TO DECIDE", info:""};
 const tag = t => TAGTXT[t] ? `<span class="tag ${t}">${TAGTXT[t]}</span>` : '';
 
 if (PINNED.length) {
@@ -206,7 +207,7 @@ DAYS.forEach(d => {
        <span class="base">${s.name}</span>
      </div>
      <div class="row"><div class="k">Activity</div><div class="v">${actsHTML}</div></div>
-     <div class="row"><div class="k">Dinner</div><div class="v">${dinnerV} ${tag(d.dinner.s)}</div></div>` +
+     <div class="row"><div class="k">Dinner</div><div class="v">${dinnerV} ${tag(d.dinner.s)}${d.dinner.note?` <span class="anote">· ${d.dinner.note}</span>`:''}</div></div>` +
     (d.adhoc ? `<div class="row"><div class="k">B&amp;L</div><div class="v adhoc">Breakfast &amp; lunch ad-hoc — <a href="https://crumley.github.io/paris-gf-dining/" target="_blank" rel="noopener">food map</a></div></div>` : '') +
     (d.todos.length ? `<ul class="todos">${d.todos.map(t=>`<li>${t}</li>`).join('')}</ul>` : '');
   host.appendChild(el);
