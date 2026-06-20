@@ -85,22 +85,21 @@
 
 <script>
 const SEG = [
-  { name:"Paris · 7th", hotel:"Hôtel Bourgogne &amp; Montana", dates:"Jul 12–15", color:"var(--seg0)" },
+  { name:"Paris · 7th", hotel:"Hôtel Bourgogne &amp; Montana", dates:"Jul 12–16 (checkout noon)", color:"var(--seg0)" },
   { name:"Chartres countryside", hotel:"Orangerie d'Esclimont (Airbnb)", dates:"Jul 16–21", color:"var(--seg1)" },
   { name:"Paris · 1st", hotel:"Grand Hôtel du Palais Royal", dates:"Jul 21–23", color:"var(--seg2)" },
 ];
 
 const PINNED = [
-  "🎨 <b>Art exhibit</b> — booked for the first Paris stretch (Jul 12–15), date/time TBD → needs a day.",
+  // all booked items now scheduled — box auto-hides when empty
 ];
 
 const DECISIONS = [
   "⏰ <b>Book skip-the-line tickets now</b> wherever available — Musée d'Orsay, catacombs, any Louvre/major sights sell out in July.",
   "⛪ <b>Confirm the Notre-Dame tour day</b> — likely the 14th, but that day's already full with Bastille + Su Misura (the 13th may be easier).",
-  "📌 <b>Slot the booked art exhibit</b> into Jul 12–15 (date/time still TBD).",
   "Reserve <b>Le Florimond</b> (Jul 13) &amp; <b>Su Misura</b> (Jul 14) for the group — both small, both book out.",
   "<b>Bastille Day plan</b> (Jul 14): parade? + a fireworks viewing spot (Champ de Mars fills early + crowd control).",
-  "<b>Jul 15:</b> boat is 7pm (not a dinner cruise) → pick a riverside dinner for after, and confirm lodging that night.",
+  "<b>Jul 15:</b> busy day — Matisse at the Grand Palais (11:30am) + Seine cruise (7pm) → just need a riverside dinner after.",
   "<b>Chartres (5 days):</b> activities wide open — cathedral + château grounds, plus possible day trips (Versailles, Giverny, a Loire château?).",
   "<b>Rental car</b> for the Chartres/Esclimont stretch (Jul 16–21).",
   "<b>Final Paris dinner</b> (Jul 22). Optional add somewhere: the <b>Catacombs</b> (needs skip-the-line).",
@@ -130,12 +129,15 @@ const DAYS = [
     adhoc:true, todos:["Confirm the Notre-Dame tour day/time (the 13th may be easier — the 14th is packed)","Parade or skip the crowds?","Pick a fireworks viewing spot (Champ de Mars fills early)","Reserve Su Misura early — Bastille night books out"] },
 
   { date:"Wed Jul 15", seg:0,
-    acts:[{t:"Seine boat ride — be there 6:30pm, cruise at 7pm", s:"set", note:"sightseeing, not a dinner cruise"}],
+    acts:[
+      {t:"Matisse exhibit at the Grand Palais — 11:30am", s:"set", note:"kids free (bring passports as proof of under-18); adults cheap — optional, but the building alone is stunning"},
+      {t:"Seine boat ride — be there 6:30pm, cruise at 7pm", s:"set", note:"sightseeing, not a dinner cruise"}
+    ],
     dinner:{t:"After the cruise (~8pm) — riverside dinner near the boat", s:"tbd"},
-    adhoc:true, todos:["Pick a dinner near the Seine for after the 7pm cruise","Confirm lodging for the night of the 15th"] },
+    adhoc:true, todos:["Bring passports to the Grand Palais (proof of under-18 for free kid entry)","Pick a dinner near the Seine for after the 7pm cruise"] },
 
   { date:"Thu Jul 16", seg:1,
-    acts:[{t:"Train Paris → Chartres (~1 hr), drive to the Esclimont Airbnb — cathedral on arrival?", s:"tbd"}],
+    acts:[{t:"Check out the 7th by noon, train Paris → Chartres (~1 hr), drive to the Esclimont Airbnb — cathedral on arrival?", s:"tbd"}],
     dinner:{t:"Rural — cook at the Airbnb, or dine in Chartres / at Château d'Esclimont", s:"tbd"},
     adhoc:false, todos:["Rental car pickup (needed for this stretch)","Grocery run for Airbnb breakfasts","Chartres Cathedral timing"] },
 
@@ -166,7 +168,11 @@ const DAYS = [
 const TAGTXT = {set:"SET", pencil:"PENCILED", tbd:"TO DECIDE", info:""};
 const tag = t => TAGTXT[t] ? `<span class="tag ${t}">${TAGTXT[t]}</span>` : '';
 
-document.getElementById('pinned').innerHTML = PINNED.map(d=>`<li>${d}</li>`).join('');
+if (PINNED.length) {
+  document.getElementById('pinned').innerHTML = PINNED.map(d=>`<li>${d}</li>`).join('');
+} else {
+  document.querySelector('.box.pinned').style.display = 'none';
+}
 document.getElementById('decisions').innerHTML = DECISIONS.map(d=>`<li>${d}</li>`).join('');
 
 const host = document.getElementById('schedule');
