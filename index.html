@@ -96,9 +96,9 @@ const PINNED = [
 
 const DECISIONS = [
   "⏰ <b>Book skip-the-line tickets now</b> wherever available — Musée d'Orsay, catacombs, any Louvre/major sights sell out in July.",
-  "⛪ <b>Confirm the Notre-Dame tour day</b> — likely the 14th, but that day's already full with Bastille + Su Misura (the 13th may be easier).",
+  "⛪ <b>Confirm the Notre-Dame tour day</b> — likely the 14th; with fireworks now on the 13th, the 14th afternoon (after the parade) is a clean slot.",
   "Reserve <b>Le Florimond</b> (Jul 13) &amp; <b>Su Misura</b> (Jul 14) for the group — both small, both book out.",
-  "<b>Bastille Day plan</b> (Jul 14): parade? + a fireworks viewing spot (Champ de Mars fills early + crowd control).",
+  "<b>Fireworks moved to Jul 13</b> this year (Eiffel ~11pm, Champ de Mars/Trocadéro) — the parade + flyover are still Jul 14 at 10am. Pick a viewing spot for the 13th; get to the Champs-Élysées early on the 14th.",
   "<b>Jul 15:</b> busy day — Matisse at the Grand Palais (11:30am) + Seine cruise (7pm) → just need a riverside dinner after.",
   "<b>Chartres (5 days):</b> activities wide open — cathedral + château grounds, plus possible day trips (Versailles, Giverny, a Loire château?).",
   "<b>Rental car</b> for the Chartres/Esclimont stretch (Jul 16–21).",
@@ -115,18 +115,21 @@ const DAYS = [
     dinner:{t:"Easy first night near the hotel — Noglu is the safe GF pick close by", s:"tbd"},
     adhoc:true, todos:["CDG → hotel transfer (taxi flat fare vs RER)","Pick a low-key arrival dinner"] },
 
-  { date:"Mon Jul 13", seg:0,
-    acts:[{t:"Musée d'Orsay — steps from the hotel", s:"pencil", note:"book skip-the-line"}],
-    dinner:{t:"Le Florimond", s:"pencil", link:"http://www.leflorimond.com/"},
-    adhoc:true, todos:["Book Orsay skip-the-line tickets","Reserve Le Florimond for the group"] },
-
-  { date:"Tue Jul 14", seg:0, flag:"🎆 Bastille Day",
+  { date:"Mon Jul 13", seg:0, flag:"🎆 Fireworks (moved here in 2026)",
     acts:[
-      {t:"Bastille Day — morning parade on the Champs-Élysées, Eiffel fireworks (~11pm)", s:"tbd"},
-      {t:"Notre-Dame guided tour", s:"set", note:"booked — day to confirm; the 14th is already full"}
+      {t:"Musée d'Orsay — steps from the hotel", s:"pencil", note:"book skip-the-line"},
+      {t:"Eiffel Tower fireworks ~11pm — best seen from the Champ de Mars / Trocadéro", s:"set", note:"moved to the 13th this year — the 14th is reserved for the Nice-attack 10-year tribute"}
     ],
-    dinner:{t:"Su Misura by Ciro — by the Champ de Mars, walkable to the fireworks", s:"pencil", link:"https://byciro.com/index.php/en/our-restaurants/sumisura"},
-    adhoc:true, todos:["Confirm the Notre-Dame tour day/time (the 13th may be easier — the 14th is packed)","Parade or skip the crowds?","Pick a fireworks viewing spot (Champ de Mars fills early)","Reserve Su Misura early — Bastille night books out"] },
+    dinner:{t:"Le Florimond", s:"pencil", link:"http://www.leflorimond.com/"},
+    adhoc:true, todos:["Book Orsay skip-the-line tickets","Reserve Le Florimond — it's near the Champ de Mars, so dinner then walk to the fireworks works well","Stake out a Champ de Mars / Trocadéro fireworks spot (fills early)"] },
+
+  { date:"Tue Jul 14", seg:0, flag:"🇫🇷 Bastille Day · parade",
+    acts:[
+      {t:"Bastille Day — parade + military flyover from 10:00am (Arc de Triomphe → Place de la Concorde)", s:"tbd"},
+      {t:"Notre-Dame guided tour", s:"set", note:"booked — day to confirm; the afternoon's now free (fireworks moved to the 13th)"}
+    ],
+    dinner:{t:"Su Misura by Ciro — fully gluten-free Italian near the Champ de Mars", s:"pencil", link:"https://byciro.com/index.php/en/our-restaurants/sumisura"},
+    adhoc:true, todos:["Stake out a Champs-Élysées spot early for the 10am parade + flyover (crowds + security form well before)","Notre-Dame tour fits the 14th afternoon nicely now — confirm the booked day","Reserve Su Misura for the group"] },
 
   { date:"Wed Jul 15", seg:0,
     acts:[
