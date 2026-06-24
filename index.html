@@ -96,12 +96,12 @@ const PINNED = [
 ];
 
 const DECISIONS = [
-  "⏰ <b>Book skip-the-line tickets now</b> wherever available — Musée d'Orsay, catacombs, any Louvre/major sights sell out in July.",
+  "⏰ <b>Book remaining skip-the-line tickets</b> (catacombs, Louvre…) — they sell out in July. <i>Orsay ✓ booked (Jul 13, fast-track noon).</i>",
   "⛪ <b>Confirm the Notre-Dame tour day</b> — likely the 14th; with fireworks now on the 13th, the 14th afternoon (after the parade) is a clean slot.",
   "Reserve <b>Le Florimond</b> (Jul 13). <b>Su Misura</b> (Jul 14) is on the waitlist (7pm, party of 7) — line up a gluten-free backup in case it doesn't clear.",
   "<b>Fireworks moved to Jul 13</b> this year (Eiffel ~11pm, Champ de Mars/Trocadéro) — the parade + flyover are still Jul 14 at 10am. Pick a viewing spot for the 13th; get to the Champs-Élysées early on the 14th.",
   "<b>Jul 15:</b> busy day — Matisse at the Grand Palais (11:30am) + Seine cruise (7pm) → just need a riverside dinner after.",
-  "<b>Chartres (5 days):</b> activities wide open — cathedral + château grounds, plus possible day trips (Versailles, Giverny, a Loire château?).",
+  "<b>Chartres (5 days):</b> Versailles bike tour (Marie Antoinette's Hamlet) is the leading idea — penciled to Fri Jul 17, still needs a day + booking. Other days open (cathedral, château grounds, Giverny, a Loire château?).",
   "<b>Rental car</b> for the Chartres/Esclimont stretch (Jul 16–21).",
   "<b>Final Paris dinner</b> (Jul 22). Optional add somewhere: the <b>Catacombs</b> (needs skip-the-line).",
 ];
@@ -118,11 +118,11 @@ const DAYS = [
 
   { date:"Mon Jul 13", seg:0, flag:"🎆 Fireworks (moved here in 2026)",
     acts:[
-      {t:"Musée d'Orsay — steps from the hotel", s:"pencil", note:"book skip-the-line"},
+      {t:"Musée d'Orsay — fast-track entry, 12:00 noon (7 adults)", s:"set", note:"booked by Mer · confirm the visit date is the 13th"},
       {t:"Eiffel Tower fireworks ~11pm — best seen from the Champ de Mars / Trocadéro", s:"set", note:"moved to the 13th this year — the 14th is reserved for the Nice-attack 10-year tribute"}
     ],
     dinner:{t:"Le Florimond", s:"pencil", link:"http://www.leflorimond.com/"},
-    adhoc:true, todos:["Book Orsay skip-the-line tickets","Reserve Le Florimond — it's near the Champ de Mars, so dinner then walk to the fireworks works well","Stake out a Champ de Mars / Trocadéro fireworks spot (fills early)"] },
+    adhoc:true, todos:["Reserve Le Florimond — it's near the Champ de Mars, so dinner then walk to the fireworks works well","Stake out a Champ de Mars / Trocadéro fireworks spot (fills early)"] },
 
   { date:"Tue Jul 14", seg:0, flag:"🇫🇷 Bastille Day · parade",
     acts:[
@@ -146,9 +146,9 @@ const DAYS = [
     adhoc:false, todos:["Rental car pickup (needed for this stretch)","Grocery run for Airbnb breakfasts","Chartres Cathedral timing"] },
 
   { date:"Fri Jul 17", seg:1,
-    acts:[{t:"Open — Chartres / countryside day", s:"tbd"}],
+    acts:[{t:"Versailles half-day bike tour — incl. Marie Antoinette's Hamlet", s:"pencil", note:"candidate, not booked · ~40 min drive from the Airbnb · movable to any open Chartres day", link:"https://www.viator.com/tours/Versailles/Versailles-Half-Day-Bike-Tour-with-Marie-Antoinettes-Hamlet/d763-3588P57"}],
     dinner:{t:"TBD", s:"tbd"}, adhoc:false,
-    todos:["Pick an activity (Chartres old town, château grounds, or a day trip?)"] },
+    todos:["Decide which Chartres day for Versailles, then book the bike tour","Pick a dinner (Chartres town or near the Airbnb)"] },
 
   { date:"Sat Jul 18", seg:1, acts:[{t:"Open", s:"tbd"}], dinner:{t:"TBD", s:"tbd"}, adhoc:false, todos:[] },
   { date:"Sun Jul 19", seg:1, acts:[{t:"Open", s:"tbd"}], dinner:{t:"TBD", s:"tbd"}, adhoc:false, todos:[] },
