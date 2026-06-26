@@ -75,6 +75,7 @@
   <div id="sections"></div>
   <div class="note">
     <b>A possible rhythm for the 5 days:</b> one <b>Chartres day</b> (cathedral + kayak on the Eure → dinner in the old town → the nightly illuminations), the <b>Versailles bike tour</b> (penciled Jul 17), one <b>teen-adventure day</b> (Espace Rambouillet or Thoiry), a <b>slow château day</b> (Maintenon), and a <b>down day at the Orangerie</b> (terrace, a cooked-in dinner, a cellar tasting that evening). Nothing locked — this is just to react to.
+    <br><br><b>One practical note:</b> many châteaux and sights stop admitting visitors about an hour before they close, so aim sightseeing for late morning or early afternoon, not the tail end of the day.
   </div>
 </div>
 <footer>
@@ -129,6 +130,18 @@ const PLACES = [
     addr:"Élancourt, Yvelines", drive:"~30 min",
     site:"https://www.franceminiature.fr/en",
     lat:48.776505, lon:1.961448 },
+  { name:"Maison Picassiette", cat:"ent", emoji:"🎨",
+    tagline:"A house encrusted inside and out in broken-china mosaic",
+    blurb:"One of Chartres' quiet wonders: a modest house that Raymond Isidore spent 1930–64 covering - walls, floors, furniture, even a little chapel - in mosaics made from millions of shards of broken plates and glass. A genuine art-brut original, just east of the center, and the kind of weird-cool that lands with teens.",
+    addr:"22 Rue du Repos, Chartres", drive:"~30 min",
+    site:"https://www.chartres-tourisme.com/en/",
+    lat:48.442097, lon:1.506688 },
+  { name:"Centre International du Vitrail", cat:"ent", emoji:"🪟",
+    tagline:"The stained-glass workshop behind the cathedral's famous blue",
+    blurb:"A few steps from the cathedral, this stained-glass center shows how those legendary windows are actually made - exhibits, real workshop pieces, and the craft behind “Chartres blue.” Short, indoor, and a natural pairing with a cathedral visit.",
+    addr:"5 Rue du Cardinal Pie, Chartres", drive:"~25–30 min",
+    site:"https://www.centre-vitrail.org/en/",
+    lat:48.448484, lon:1.486053 },
 
   // ---- EATING (Chartres, ~25–30 min) ----
   { name:"Crêperie du Vieux Chartres", cat:"eat", emoji:"🥞",
@@ -151,11 +164,36 @@ const PLACES = [
     blurb:"Charming bistro doing generous portions of the classics: slow-cooked beef bourguignon, duck confit, the comfort end of French cooking. Reliable and filling for the whole table.",
     addr:"Rue du Cheval Blanc, Chartres", drive:"~25–30 min",
     lat:48.447381, lon:1.486222 },
+  { name:"Le Moulin de Ponceau", cat:"eat", emoji:"🌿",
+    tagline:"Riverside dining — a terrace right on the Eure",
+    blurb:"A local-favorite restaurant in an old mill on the banks of the Eure in the lower town, with a pretty waterside terrace and seasonal French cooking. The scenic special-occasion dinner if the weather's good — ask for a terrace table.",
+    addr:"21 Rue de la Tannerie, Chartres", drive:"~25–30 min",
+    lat:48.449131, lon:1.490731 },
+  { name:"Les Feuillantines", cat:"eat", emoji:"🍴",
+    tagline:"Understated room, the most ambitious cooking in town",
+    blurb:"In the medieval quarter, a stylish low-key spot doing the most adventurous food on this list — house terrine, duck risotto with caramelized shallots, beef ravioli scented with lemongrass and smoked tea, a molten chocolate cake to finish. A grown-up dinner that still works for the whole table.",
+    addr:"4 Rue du Bois Merrain, Chartres", drive:"~25–30 min",
+    lat:48.444608, lon:1.486314 },
+  { name:"Le Parvis", cat:"eat", emoji:"🥗",
+    tagline:"Cathedral-view terrace — galettes & garden salads",
+    blurb:"Lunch with the cathedral towers right in front of you: fresh garden salads and savory buckwheat galettes (naturally gluten-free) on a terrace facing the parvis. The easy, scenic midday stop between sightseeing.",
+    addr:"Place de la Cathédrale, Chartres", drive:"~25–30 min",
+    lat:48.447600, lon:1.488400 },
+  { name:"Le 21", cat:"eat", emoji:"🍽️",
+    tagline:"Tiny market-driven menu by the cathedral",
+    blurb:"An intimate room next to the cathedral with a deliberately short menu — three starters, three mains, three desserts — built on whatever's freshest. A quality-over-choice pick for a calmer dinner; small, so reserve.",
+    addr:"Rue du Soleil d'Or, Chartres", drive:"~25–30 min",
+    lat:48.446248, lon:1.487999 },
+  { name:"Marché Couvert (Place Billard)", cat:"eat", emoji:"🧺",
+    tagline:"Covered market — stock the Airbnb (Wed & Sat mornings)",
+    blurb:"The 19th-century covered market hall: cheese, charcuterie, produce and bread from local growers on Wednesday and Saturday mornings. The move for a country dinner cooked in at the Orangerie — wander, taste, fill a basket, then grab bottles at a caviste on the way out.",
+    addr:"Place Billard, Chartres", drive:"~25–30 min",
+    lat:48.446504, lon:1.489593 },
 
   // ---- WINE ----
   { name:"Le Grand Monarque", cat:"wine", emoji:"🍷",
     tagline:"Sommelier-led cellar tastings + an upscale dining room",
-    blurb:"The headline wine experience: tastings led by the hotel's sommelier in a vaulted stone cellar, in small groups around a theme (rosé, food pairings, a visiting Loire winegrower), with a natural/organic/biodynamic bent — privatizable with charcuterie. Pair a <a href='https://www.grand-monarque.com/en/original-tasting-chartres.html' target='_blank' rel='noopener'>cellar tasting</a> for the two of you with dinner for the kids in the celebrated restaurant upstairs.",
+    blurb:"The headline wine experience: tastings led by the hotel's sommelier in a vaulted stone cellar, in small groups around a theme (rosé, food pairings, a visiting Loire winegrower), with a natural/organic/biodynamic bent — privatizable with charcuterie. Pair a <a href='https://www.grand-monarque.com/en/original-tasting-chartres.html' target='_blank' rel='noopener'>cellar tasting</a> for the two of you with dinner for the kids in its Michelin-starred restaurant, <b>Le Georges</b>, upstairs.",
     addr:"22 Place des Épars, Chartres", drive:"~25–30 min",
     site:"https://www.grand-monarque.com/en/",
     lat:48.444398, lon:1.483171 },
@@ -182,6 +220,11 @@ const PLACES = [
     addr:"Rue des Pierres Missigault, Chartres Sud", drive:"~25 min",
     site:"https://www.vandb.fr/v-and-b-chartres.html",
     lat:48.414822, lon:1.465100 },
+  { name:"Vouvray wine day (Loire Valley)", cat:"wine", emoji:"🍇", noMap:true,
+    tagline:"A real vineyard day — but it's a haul south",
+    blurb:"If you want actual cellars and vines, the nearest true wine country is Vouvray, near Tours/Amboise — Chenin Blanc in dry, off-dry, sweet and sparkling. A cellar tour + tasting runs about €35 (Maison Brédif, Caves Monmousseau and Grandes Caves Saint-Roch are the names). The catch: it's ~1h30+ each way, so it eats a whole day — only worth it if a vineyard visit is the point, otherwise the Grand Monarque cellar gives you the wine without the drive.",
+    addr:"Vouvray — ~1h30+ south (off the map)", drive:"~1h30+ each way",
+    site:"https://www.winalist.com/appellations/vouvray" },
 ];
 
 function mapUrl(p){
@@ -197,6 +240,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 const bounds = [];
 PLACES.forEach(p => {
+  if (p.noMap) return;
   const icon = L.divIcon({
     className:'',
     html:`<div class="leaflet-marker-pin" style="background:${COLORS[p.cat]}"><span>${p.emoji}</span></div>`,
