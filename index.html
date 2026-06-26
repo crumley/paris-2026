@@ -96,12 +96,12 @@ const PINNED = [
 ];
 
 const DECISIONS = [
-  "⏰ <b>Book remaining skip-the-line tickets</b> (catacombs, Louvre…) — they sell out in July. <i>Orsay ✓ booked (Jul 13, fast-track noon).</i>",
+  "🦴 <b>Catacombs (Jul 22):</b> book 4 <b>self-guided</b> tickets the moment they release — <b>~10am Paris on Jul 15</b> (sells out in minutes). 📅 <a href='catacombs-reminder.ics'>Add the reminder to your calendar</a>. Meanwhile keep refreshing the guided tours for a 4-seat slot (links on the 22nd). <i>Orsay ✓ booked; Louvre still open if we want it.</i>",
   "<b>Paris dinners all booked</b> — Café de Mars (12th), Tasca (13th), Su Misura (14th), Angelo (15th). On hand to swap in: <b>Le Bouchon Parisien</b> (GF-friendly, near the Eiffel) &amp; <b>LouLou</b> (Italian, Tuileries/1st).",
   "<b>Fireworks moved to Jul 13</b> this year (Eiffel ~11pm, Champ de Mars/Trocadéro) — the parade + flyover are still Jul 14 at 10am. Pick a viewing spot for the 13th; get to the Champs-Élysées early on the 14th.",
   "<b>Chartres (5 days):</b> Versailles bike tour (Marie Antoinette's Hamlet) is the leading idea — penciled to Fri Jul 17, still needs a day + booking. Other days open (cathedral, château grounds, Giverny, a Loire château?).",
   "<b>Book transportation</b> for the Chartres/Esclimont stretch (Jul 16–21) — out to the countryside and back, plus getting around while there (no rental car).",
-  "<b>Final Paris dinner</b> (Jul 22). Optional add somewhere: the <b>Catacombs</b> (needs skip-the-line).",
+  "<b>Final Paris dinner</b> (Jul 22) + plan the relaxed last day.",
 ];
 
 const DAYS = [
@@ -136,7 +136,7 @@ const DAYS = [
       {t:"Seine boat ride — be there 6:30pm, cruise at 7pm", s:"set", note:"sightseeing, not a dinner cruise"}
     ],
     dinner:{t:"Angelo — 5:00pm (early, before the boat)", s:"set", note:"Italian near the Eiffel — early seating so you make the 6:30/7pm cruise"},
-    adhoc:true, todos:["Bring passports to the Grand Palais (proof of under-18 for free kid entry)"] },
+    adhoc:true, todos:["Bring passports to the Grand Palais (proof of under-18 for free kid entry)","🦴 ~10am Paris: book 4 Catacombs self-guided tickets for the 22nd — rolling 7-day release, sells out in minutes (<a href='https://www.catacombes.paris.fr/en' target='_blank' rel='noopener'>official site</a>)"] },
 
   { date:"Thu Jul 16", seg:1,
     acts:[{t:"Check out the 7th by noon, train Paris → Chartres (~1 hr), then on to the Esclimont Airbnb — cathedral on arrival?", s:"tbd"}],
@@ -158,9 +158,12 @@ const DAYS = [
     adhoc:true, todos:["Book transportation from the Airbnb back to Paris"] },
 
   { date:"Wed Jul 22", seg:2,
-    acts:[{t:"Last full day — relaxed (Palais Royal, Louvre, shopping?)", s:"tbd"}],
+    acts:[
+      {t:"Catacombs (4 of us)", s:"pencil", note:"plan: self-guided tickets booked Jul 15, or a guided tour if a 4-seat slot opens · Denfert-Rochereau (14th), ~30 min metro from Palais Royal"},
+      {t:"Otherwise a relaxed last day — Palais Royal, Louvre, shopping", s:"tbd"}
+    ],
     dinner:{t:"Final Paris dinner — make it a good one?", s:"tbd"},
-    adhoc:true, todos:["Pick the final-night dinner","Optional: Catacombs or Louvre (book skip-the-line)","Any must-do left before we fly?"] },
+    adhoc:true, todos:["Pick the final-night dinner","Keep refreshing guided Catacombs tours for a 4-seat slot on the 22nd: <a href='https://www.getyourguide.com/paris-catacombs-l2605/' target='_blank' rel='noopener'>GetYourGuide</a> · <a href='https://www.takewalks.com/paris-tours/paris-catacombs-tour/' target='_blank' rel='noopener'>Walks</a> · <a href='https://www.tiqets.com/en/things-to-do-in-paris-c66746/tickets-for-catacombs-of-paris-guided-tour-p978144/' target='_blank' rel='noopener'>Tiqets</a> · <a href='https://www.headout.com/paris-catacombs-tour-c-253/' target='_blank' rel='noopener'>Headout</a> · <a href='https://www.viator.com/Paris-attractions/Paris-Catacombs-Catacombes-de-Paris/d479-a590' target='_blank' rel='noopener'>Viator</a>","Keep the evening free for the final dinner","Any must-do left before we fly?"] },
 
   { date:"Thu Jul 23", seg:2,
     acts:[{t:"Depart — checkout ~8:30am, taxi to CDG (flight ~12:25pm)", s:"set"}],

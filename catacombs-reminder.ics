@@ -1,0 +1,43 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//paris-2026//catacombs-reminder//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VTIMEZONE
+TZID:Europe/Paris
+BEGIN:DAYLIGHT
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+TZNAME:CEST
+DTSTART:19700329T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+DTSTART:19701025T030000
+RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:catacombs-booking-20260715@crumley.github.io
+DTSTAMP:20260626T120000Z
+DTSTART;TZID=Europe/Paris:20260715T100000
+DTEND;TZID=Europe/Paris:20260715T101500
+SUMMARY:Book Paris Catacombs tickets (for Jul 22)
+DESCRIPTION:Catacombs timed-entry tickets release exactly 7 days ahead at 10:00 Paris time. Book 4 self-guided tickets for Wed July 22 the moment they open — sells out in minutes. Each entry time opens 7 days prior at that same clock time. Official site: https://www.catacombes.paris.fr/en
+LOCATION:Paris
+URL:https://www.catacombes.paris.fr/en
+BEGIN:VALARM
+TRIGGER:-P1D
+ACTION:DISPLAY
+DESCRIPTION:Tomorrow 10:00 Paris — Catacombs tickets for Jul 22 open
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Catacombs tickets open in 10 minutes — be ready to book 4
+END:VALARM
+END:VEVENT
+END:VCALENDAR
