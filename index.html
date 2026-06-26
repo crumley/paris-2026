@@ -98,7 +98,7 @@ const PINNED = [
 const DECISIONS = [
   "⏰ <b>Book remaining skip-the-line tickets</b> (catacombs, Louvre…) — they sell out in July. <i>Orsay ✓ booked (Jul 13, fast-track noon).</i>",
   "⛪ <b>Confirm the Notre-Dame tour day</b> — likely the 14th; with fireworks now on the 13th, the 14th afternoon (after the parade) is a clean slot.",
-  "Reserve <b>Le Florimond</b> (Jul 13). <b>Su Misura</b> (Jul 14) is on the waitlist (7pm, party of 7) — line up a gluten-free backup in case it doesn't clear.",
+  "<b>Paris dinners all booked</b> — Café de Mars (12th), Tasca (13th), Su Misura (14th), Angelo (15th). On hand to swap in: <b>Le Bouchon Parisien</b> (GF-friendly, near the Eiffel) &amp; <b>LouLou</b> (Italian, Tuileries/1st).",
   "<b>Fireworks moved to Jul 13</b> this year (Eiffel ~11pm, Champ de Mars/Trocadéro) — the parade + flyover are still Jul 14 at 10am. Pick a viewing spot for the 13th; get to the Champs-Élysées early on the 14th.",
   "<b>Jul 15:</b> busy day — Matisse at the Grand Palais (11:30am) + Seine cruise (7pm) → just need a riverside dinner after.",
   "<b>Chartres (5 days):</b> Versailles bike tour (Marie Antoinette's Hamlet) is the leading idea — penciled to Fri Jul 17, still needs a day + booking. Other days open (cathedral, château grounds, Giverny, a Loire château?).",
@@ -113,32 +113,32 @@ const DAYS = [
 
   { date:"Sun Jul 12", seg:0,
     acts:[{t:"Arrive CDG ~12:35pm, settle into the 7th", s:"set"}],
-    dinner:{t:"Easy first night near the hotel — Noglu is the safe GF pick close by", s:"tbd"},
-    adhoc:true, todos:["CDG → hotel transfer (taxi flat fare vs RER)","Pick a low-key arrival dinner"] },
+    dinner:{t:"Le Café de Mars — 6:30pm", s:"set", note:"neighborhood bistro by the Champ de Mars (11 rue Augereau, 7th)", link:"https://www.cafedemars.fr/en/"},
+    adhoc:true, todos:["CDG → hotel transfer (taxi flat fare vs RER)"] },
 
   { date:"Mon Jul 13", seg:0, flag:"🎆 Fireworks (moved here in 2026)",
     acts:[
       {t:"Musée d'Orsay — fast-track entry, 12:00 noon (7 adults)", s:"set", note:"booked by Mer · confirm the visit date is the 13th"},
       {t:"Eiffel Tower fireworks ~11pm — best seen from the Champ de Mars / Trocadéro", s:"set", note:"moved to the 13th this year — the 14th is reserved for the Nice-attack 10-year tribute"}
     ],
-    dinner:{t:"Le Florimond", s:"pencil", link:"http://www.leflorimond.com/"},
-    adhoc:true, todos:["Reserve Le Florimond — it's near the Champ de Mars, so dinner then walk to the fireworks works well","Stake out a Champ de Mars / Trocadéro fireworks spot (fills early)"] },
+    dinner:{t:"Tasca by Ciro — 7:00pm", s:"set", note:"100% gluten-free Italian (By Ciro · AFDIAG) by the Champ de Mars", link:"https://byciro.com/index.php/en/our-restaurants/tasca-en"},
+    adhoc:true, todos:["After dinner, walk to the Champ de Mars / Trocadéro for the ~11pm fireworks — stake out a spot early (fills fast)"] },
 
   { date:"Tue Jul 14", seg:0, flag:"🇫🇷 Bastille Day · parade",
     acts:[
       {t:"Bastille Day — parade + military flyover from 10:00am (Arc de Triomphe → Place de la Concorde)", s:"tbd"},
       {t:"Notre-Dame guided tour", s:"set", note:"booked — day to confirm; the afternoon's now free (fireworks moved to the 13th)"}
     ],
-    dinner:{t:"Su Misura by Ciro — fully gluten-free Italian near the Champ de Mars", s:"wait", note:"on the waitlist — Tue Jul 14, 7:00pm, party of 7", link:"https://byciro.com/index.php/en/our-restaurants/sumisura"},
-    adhoc:true, todos:["Stake out a Champs-Élysées spot early for the 10am parade + flyover (crowds + security form well before)","Notre-Dame tour fits the 14th afternoon nicely now — confirm the booked day","Su Misura is waitlisted (Tue 7pm, party of 7) — watch for the confirmation + keep a GF backup ready"] },
+    dinner:{t:"Su Misura by Ciro — 7:00pm", s:"set", note:"waitlist cleared — fully gluten-free Italian near the Champ de Mars", link:"https://byciro.com/index.php/en/our-restaurants/sumisura"},
+    adhoc:true, todos:["Stake out a Champs-Élysées spot early for the 10am parade + flyover (crowds + security form well before)","Notre-Dame tour fits the 14th afternoon nicely now — confirm the booked day"] },
 
   { date:"Wed Jul 15", seg:0,
     acts:[
       {t:"Matisse exhibit at the Grand Palais — 11:30am", s:"set", note:"kids free (bring passports as proof of under-18); adults cheap — optional, but the building alone is stunning"},
       {t:"Seine boat ride — be there 6:30pm, cruise at 7pm", s:"set", note:"sightseeing, not a dinner cruise"}
     ],
-    dinner:{t:"After the cruise (~8pm) — riverside dinner near the boat", s:"tbd"},
-    adhoc:true, todos:["Bring passports to the Grand Palais (proof of under-18 for free kid entry)","Pick a dinner near the Seine for after the 7pm cruise"] },
+    dinner:{t:"Angelo — 5:00pm (early, before the boat)", s:"set", note:"Italian near the Eiffel — early seating so you make the 6:30/7pm cruise"},
+    adhoc:true, todos:["Bring passports to the Grand Palais (proof of under-18 for free kid entry)"] },
 
   { date:"Thu Jul 16", seg:1,
     acts:[{t:"Check out the 7th by noon, train Paris → Chartres (~1 hr), drive to the Esclimont Airbnb — cathedral on arrival?", s:"tbd"}],
