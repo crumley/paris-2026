@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Chartres &amp; Esclimont · Things to Do, Eat &amp; Drink</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<style>
+  :root{
+    --ent:#2f8f9d; --eat:#d2553b; --wine:#8a1f3d; --base:#6a6f7a;
+    --ink:#22242a; --muted:#6a6f7a; --bg:#f7f6f2; --card:#fff; --line:#e7e3da;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.5}
+  header{padding:26px 20px 8px;max-width:980px;margin:0 auto}
+  h1{margin:0 0 6px;font-size:1.6rem;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:1rem;margin:0 0 4px}
+  .back{display:inline-block;margin:10px 0 2px;font-size:.85rem;font-weight:600;text-decoration:none;
+    background:#22242a;color:#fff;padding:8px 13px;border-radius:9px}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px 60px}
+  .caveat{font-size:.9rem;color:#5a4a2a;background:#fdf6e7;border:1px solid #f0e3c0;
+    border-left:4px solid var(--base);border-radius:12px;padding:12px 15px;margin:14px 0 4px}
+  #map{height:460px;width:100%;border-radius:14px;border:1px solid var(--line);margin:14px 0 14px;
+    box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin:0 0 10px;font-size:.9rem;color:var(--muted)}
+  .legend b{color:var(--ink)}
+  .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .secthead{display:flex;align-items:center;gap:9px;margin:30px 0 4px;font-size:1.28rem;font-weight:700}
+  .secthead .bar{width:11px;height:11px;border-radius:50%}
+  .sectsub{color:var(--muted);font-size:.9rem;margin:0 0 14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+    box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column}
+  .card h3{margin:0;font-size:1.16rem;display:flex;align-items:center;gap:8px;line-height:1.25}
+  .pill{font-size:.68rem;font-weight:700;color:#fff;border-radius:999px;padding:2px 9px;white-space:nowrap}
+  .pill.ent{background:var(--ent)} .pill.eat{background:var(--eat)} .pill.wine{background:var(--wine)}
+  .tagline{font-weight:600;margin:8px 0 2px;font-size:.97rem}
+  .blurb{color:#3b3f47;font-size:.92rem;margin:6px 0 10px;flex:1}
+  .blurb a{color:var(--wine);font-weight:600}
+  .meta{font-size:.83rem;color:var(--muted);margin-bottom:10px}
+  .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto}
+  .links a{font-size:.84rem;font-weight:600;text-decoration:none;padding:7px 12px;border-radius:9px;border:1px solid var(--line)}
+  .links a.primary{background:#22242a;color:#fff;border-color:#22242a}
+  .links a.ghost{background:#fff;color:#22242a}
+  .leaflet-marker-pin{display:flex;align-items:center;justify-content:center;width:30px;height:30px;
+    border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.35);font-size:14px}
+  .leaflet-marker-pin span{transform:rotate(45deg)}
+  .note{font-size:.88rem;color:#3b3f47;margin:26px 0 0;padding:15px 17px;background:#fff;
+    border:1px solid var(--line);border-radius:12px}
+  .note b{color:var(--ink)}
+  footer{max-width:980px;margin:0 auto;padding:0 20px 40px;color:var(--muted);font-size:.82rem}
+</style>
+</head>
+<body>
+<header>
+  <h1>🏰 Chartres &amp; Esclimont · Do, Eat &amp; Drink</h1>
+  <p class="sub">Options for our 5 nights in the countryside (Jul 16–21) — a board to talk over and pick from. Tap a pin or a card for more info.</p>
+  <p class="sub">Base: the Orangerie d'Esclimont. Most things are a 20–40 min drive; Chartres town is ~25–30 min.</p>
+  <a class="back" href="./">← Back to the schedule</a>
+</header>
+<div class="wrap">
+  <div class="caveat">
+    ⚠️ <b>Heads-up:</b> the big Château d'Esclimont hotel right next door is closed for a multi-year luxury renovation, so its gastronomic restaurant isn't an option — plan dinners out in Chartres or cooked at the Airbnb. Worth one confirmation call, but assume it's a no.
+  </div>
+  <div id="map"></div>
+  <div class="legend">
+    <span><span class="dot" style="background:var(--ent)"></span><b>Entertainment</b> · do</span>
+    <span><span class="dot" style="background:var(--eat)"></span><b>Eating</b> · Chartres town</span>
+    <span><span class="dot" style="background:var(--wine)"></span><b>Wine</b> · bars, cellar, shops</span>
+    <span><span class="dot" style="background:var(--base)"></span><b>Our base</b> · Esclimont</span>
+  </div>
+  <div id="sections"></div>
+  <div class="note">
+    <b>A possible rhythm for the 5 days:</b> one <b>Chartres day</b> (cathedral + kayak on the Eure → dinner in the old town → the nightly illuminations), the <b>Versailles bike tour</b> (penciled Jul 17), one <b>teen-adventure day</b> (Espace Rambouillet or Thoiry), a <b>slow château day</b> (Maintenon), and a <b>down day at the Orangerie</b> (terrace, a cooked-in dinner, a cellar tasting that evening). Nothing locked — this is just to react to.
+  </div>
+</div>
+<footer>
+  Map data © OpenStreetMap contributors. Unlisted working doc for our July trip · not indexed.
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const COLORS = {ent:'#2f8f9d', eat:'#d2553b', wine:'#8a1f3d', base:'#6a6f7a'};
+
+const PLACES = [
+  // ---- BASE ----
+  { name:"Orangerie d'Esclimont", cat:"base", emoji:"🏡", mapOnly:true,
+    tagline:"Our home base", addr:"Saint-Symphorien-le-Château",
+    lat:48.519804, lon:1.766638 },
+
+  // ---- ENTERTAINMENT ----
+  { name:"Chartres old town & cathedral", cat:"ent", emoji:"🕯️",
+    tagline:"Gothic cathedral, medieval lanes — and free light shows every night",
+    blurb:"The UNESCO cathedral with its famous blue stained glass, set in a half-timbered old town of cobbled lanes. Every summer night ~30 buildings are lit with projections (dusk to 1am, free) for <b>Chartres en Lumières</b> — so the move is dinner in the old town, then wander the illuminations. Free <b>ChartrEstivals</b> concerts run all July too.",
+    addr:"Cathédrale Notre-Dame, Chartres", drive:"~25–30 min",
+    site:"https://www.chartresenlumieres.com/en/calendar-schedules",
+    lat:48.447812, lon:1.487910 },
+  { name:"Bords de l'Eure / La Petite Venise", cat:"ent", emoji:"🛶",
+    tagline:"Riverside park — kayaks, pedalos, mini-golf, easy afternoon",
+    blurb:"Down in the lower town along the Eure (“Little Venice”): rent a kayak, canoe or pedalo, or just stroll the willow-lined banks. There's a playground, a small animal park and mini-golf — a relaxed pairing with a cathedral morning.",
+    addr:"Parc des Bords de l'Eure, Chartres", drive:"~30 min",
+    site:"https://www.chartres-tourisme.com/en/",
+    lat:48.443275, lon:1.498000 },
+  { name:"Espace Rambouillet", cat:"ent", emoji:"🐺",
+    tagline:"Forest wildlife park — wolves, deer, raptor show + treetop trampolines",
+    blurb:"The closest big outing. 250 hectares of forest with wolves, red deer and a birds-of-prey flying show, plus the Odyssée Verte canopy walk and giant trampolines slung between the trees. Genuinely fun for teens; half a day.",
+    addr:"Sonchamp / Forêt de Rambouillet", drive:"~20 min",
+    site:"https://www.espacerambouillet.fr/",
+    lat:48.623923, lon:1.878274 },
+  { name:"Château de Maintenon", cat:"ent", emoji:"🏰",
+    tagline:"Le Nôtre gardens + a dramatic unfinished royal aqueduct",
+    blurb:"A pretty 16th–17th-c. château with formal Le Nôtre gardens and Vauban's giant half-built aqueduct (meant to carry water all the way to Versailles). Low-key and scenic, and it sits between you and Chartres so it pairs with a town day. €8.50 / €4.50 kids; open Tue–Sun in July.",
+    addr:"Maintenon (between you & Chartres)", drive:"~25 min",
+    site:"https://www.chateaudemaintenon.fr/",
+    lat:48.585778, lon:1.578621 },
+  { name:"Thoiry ZooSafari", cat:"ent", emoji:"🦁",
+    tagline:"Drive-through safari — lions, giraffes, rhinos — plus a zoo park",
+    blurb:"Drive your own car through the safari reserve past lions, giraffes, rhinos and bison, then walk the zoo park. A full-day crowd-pleaser to the north.",
+    addr:"Thoiry, Yvelines", drive:"~35–40 min",
+    site:"https://www.thoiry.net/",
+    lat:48.865857, lon:1.796978 },
+  { name:"France Miniature", cat:"ent", emoji:"🗼",
+    tagline:"All of France shrunk to 1/30 — 117 monuments + 25 rides",
+    blurb:"An open-air park of 117 miniature French landmarks (Eiffel Tower, Mont-St-Michel, châteaux) plus rides; celebrating its 35th year in 2026. More tween than teen, but a fun, low-stakes half-day.",
+    addr:"Élancourt, Yvelines", drive:"~30 min",
+    site:"https://www.franceminiature.fr/en",
+    lat:48.776505, lon:1.961448 },
+
+  // ---- EATING (Chartres, ~25–30 min) ----
+  { name:"Crêperie du Vieux Chartres", cat:"eat", emoji:"🥞",
+    tagline:"Buckwheat galettes — naturally gluten-free, lively, cheap",
+    blurb:"Big menu of sweet and savory crêpes in a colorful old-town room. Buckwheat galettes are naturally gluten-free, which makes this the easiest casual + GF overlap — and a sure teen-pleaser. (Flag cross-contact if it matters that night.)",
+    addr:"5 Rue de la Porte Guillaume, Chartres", drive:"~25–30 min",
+    lat:48.446978, lon:1.492379 },
+  { name:"Café Serpente", cat:"eat", emoji:"☕",
+    tagline:"Brasserie right across from the cathedral",
+    blurb:"Classic French brasserie facing the cathedral doors — croque-monsieur, salads, French standards and crêpes, with staff used to families. The prime spot for an easy lunch or a pre-illuminations dinner with the cathedral lit up across the square.",
+    addr:"2 Cloître Notre-Dame, Chartres", drive:"~25–30 min",
+    lat:48.447183, lon:1.488082 },
+  { name:"Le Tripot", cat:"eat", emoji:"🍲",
+    tagline:"Well-loved old-town bistro",
+    blurb:"An intimate, well-rated bistro on a quiet old-town street — seasonal French cooking a notch above café fare. Good for a proper sit-down dinner; small, so book ahead.",
+    addr:"11 Place Jean Moulin area, Chartres", drive:"~25–30 min",
+    lat:48.446365, lon:1.485076 },
+  { name:"Le Pichet", cat:"eat", emoji:"🍷",
+    tagline:"Hearty French classics — duck confit, bœuf bourguignon",
+    blurb:"Charming bistro doing generous portions of the classics: slow-cooked beef bourguignon, duck confit, the comfort end of French cooking. Reliable and filling for the whole table.",
+    addr:"Rue du Cheval Blanc, Chartres", drive:"~25–30 min",
+    lat:48.447381, lon:1.486222 },
+
+  // ---- WINE ----
+  { name:"Le Grand Monarque", cat:"wine", emoji:"🍷",
+    tagline:"Sommelier-led cellar tastings + an upscale dining room",
+    blurb:"The headline wine experience: tastings led by the hotel's sommelier in a vaulted stone cellar, in small groups around a theme (rosé, food pairings, a visiting Loire winegrower), with a natural/organic/biodynamic bent — privatizable with charcuterie. Pair a <a href='https://www.grand-monarque.com/en/original-tasting-chartres.html' target='_blank' rel='noopener'>cellar tasting</a> for the two of you with dinner for the kids in the celebrated restaurant upstairs.",
+    addr:"22 Place des Épars, Chartres", drive:"~25–30 min",
+    site:"https://www.grand-monarque.com/en/",
+    lat:48.444398, lon:1.483171 },
+  { name:"Lichette", cat:"wine", emoji:"🥂",
+    tagline:"Cozy, natural-leaning wine bar in the center",
+    blurb:"A local-favorite bar à vin in the old town — a short, well-chosen by-the-glass list and small plates. Low-key spot for an evening glass after wandering the lit-up streets.",
+    addr:"Rue des Changes, Chartres", drive:"~25–30 min",
+    lat:48.446849, lon:1.488231 },
+  { name:"Le Garage", cat:"wine", emoji:"🍇",
+    tagline:"Wine bar built around local & regional growers",
+    blurb:"Relaxed wine bar with a selection focused on quality local and regional producers — a casual alternative for a glass or a bottle in town.",
+    addr:"Chartres centre", drive:"~25–30 min",
+    site:"https://www.barlegaragechartres.fr/",
+    lat:48.444554, lon:1.485590 },
+  { name:"Cave Saint-Lubin", cat:"wine", emoji:"🛒",
+    tagline:"Wine shop — stock the Airbnb terrace",
+    blurb:"A proper caviste in the center for grabbing bottles to bring back to the Orangerie — strong Loire selection (Vouvray, Sancerre, Chinon) for those cooked-in dinners on the terrace.",
+    addr:"28 Rue du Soleil d'Or, Chartres", drive:"~25–30 min",
+    site:"https://cave-st-lubin.com/",
+    lat:48.445931, lon:1.486952 },
+  { name:"V and B Chartres", cat:"wine", emoji:"🍾",
+    tagline:"Wine + craft-beer shop & tasting bar (Chartres Sud)",
+    blurb:"Part bottle shop, part bar — wines, craft beers and spirits with tasting nights. Handy on the south edge of town for stocking up; closest of the shops to the drive home.",
+    addr:"Rue des Pierres Missigault, Chartres Sud", drive:"~25 min",
+    site:"https://www.vandb.fr/v-and-b-chartres.html",
+    lat:48.414822, lon:1.465100 },
+];
+
+function mapUrl(p){
+  return "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(p.name + ", " + (p.addr||"Chartres") + ", France");
+}
+
+// ---- Map ----
+const map = L.map('map', {scrollWheelZoom:false});
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom:19, attribution:'&copy; OpenStreetMap'
+}).addTo(map);
+
+const bounds = [];
+PLACES.forEach(p => {
+  const icon = L.divIcon({
+    className:'',
+    html:`<div class="leaflet-marker-pin" style="background:${COLORS[p.cat]}"><span>${p.emoji}</span></div>`,
+    iconSize:[30,30], iconAnchor:[15,30], popupAnchor:[0,-28]
+  });
+  const m = L.marker([p.lat,p.lon],{icon}).addTo(map);
+  const siteLink = p.site ? `<a href="${p.site}" target="_blank" rel="noopener">More info</a> · ` : '';
+  m.bindPopup(
+    `<b>${p.emoji} ${p.name}</b><br>${p.addr||''}<br>`+
+    siteLink + `<a href="${mapUrl(p)}" target="_blank" rel="noopener">Map</a>`
+  );
+  bounds.push([p.lat,p.lon]);
+});
+map.fitBounds(bounds, {padding:[40,40]});
+
+// ---- Sections ----
+const SECTIONS = [
+  { cat:"ent",  title:"🎭 Entertainment", sub:"Things to do — closest first, all an easy drive from Esclimont." },
+  { cat:"eat",  title:"🍽️ Eating",        sub:"Dinners mostly mean a run into Chartres (~25–30 min) — or cook in and pick up wine." },
+  { cat:"wine", title:"🍷 Wine",          sub:"You're just north of the Loire, so the cellars lean into Vouvray, Sancerre & Chinon." },
+];
+
+const host = document.getElementById('sections');
+SECTIONS.forEach(sec => {
+  const head = document.createElement('div');
+  head.className = 'secthead';
+  head.innerHTML = `<span class="bar" style="background:${COLORS[sec.cat]}"></span>${sec.title}`;
+  host.appendChild(head);
+  const sub = document.createElement('p');
+  sub.className = 'sectsub';
+  sub.textContent = sec.sub;
+  host.appendChild(sub);
+
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  PLACES.filter(p => p.cat === sec.cat && !p.mapOnly).forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'card';
+    const mapBtn = `<a class="${p.site?'ghost':'primary'}" href="${mapUrl(p)}" target="_blank" rel="noopener">Map &amp; directions ↗</a>`;
+    const siteBtn = p.site ? `<a class="primary" href="${p.site}" target="_blank" rel="noopener">More info ↗</a>` : '';
+    el.innerHTML =
+      `<h3>${p.emoji} ${p.name} <span class="pill ${p.cat}">${sec.title.replace(/^\S+\s/,'')}</span></h3>`+
+      `<div class="tagline">${p.tagline}</div>`+
+      `<div class="blurb">${p.blurb}</div>`+
+      `<div class="meta">📍 ${p.addr} · 🚗 ${p.drive} from Esclimont</div>`+
+      `<div class="links">${siteBtn}${mapBtn}</div>`;
+    grid.appendChild(el);
+  });
+  host.appendChild(grid);
+});
+</script>
+</body>
+</html>
