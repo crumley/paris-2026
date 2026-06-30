@@ -37,6 +37,8 @@
   .card h3{margin:0;font-size:1.16rem;display:flex;align-items:center;gap:8px;line-height:1.25}
   .pill{font-size:.68rem;font-weight:700;color:#fff;border-radius:999px;padding:2px 9px;white-space:nowrap}
   .pill.ent{background:var(--ent)} .pill.eat{background:var(--eat)} .pill.wine{background:var(--wine)}
+  .pill.pencil{background:#c9821a}
+  .pencilnote{font-size:.82rem;font-weight:700;color:#b5740f;margin:7px 0 0}
   .tagline{font-weight:600;margin:8px 0 2px;font-size:.97rem}
   .blurb{color:#3b3f47;font-size:.92rem;margin:6px 0 10px;flex:1}
   .blurb a{color:var(--wine);font-weight:600}
@@ -144,6 +146,13 @@ const PLACES = [
     lat:48.448484, lon:1.486053 },
 
   // ---- EATING (Chartres, ~25–30 min) ----
+  { name:"Cobalt", cat:"eat", emoji:"🍽️",
+    penciled:"Sat Jul 18 · 7:30pm · terrace for 8 (confirming date)",
+    tagline:"Mediterranean small plates on a terrace facing the cathedral",
+    blurb:"Penciled for the 18th: a buzzy spot right at the foot of the cathedral doing Mediterranean mezze and shareable plates — tarama with truffle, tuna tartare, burrata, veal Milanese — with wine and cocktails, and the menu flags <b>sans gluten</b>. The terrace looks straight at the cathedral, and it's open till 1am, so after a 7:30 dinner you can stay put and watch the ~10:30 illuminations light it up without moving.",
+    addr:"1 Rue Fulbert, Chartres", drive:"~25–30 min",
+    site:"https://www.cobalt-chartres.com/",
+    lat:48.446819, lon:1.487581 },
   { name:"Crêperie du Vieux Chartres", cat:"eat", emoji:"🥞",
     tagline:"Buckwheat galettes — naturally gluten-free, lively, cheap",
     blurb:"Big menu of sweet and savory crêpes in a colorful old-town room. Buckwheat galettes are naturally gluten-free, which makes this the easiest casual + GF overlap — and a sure teen-pleaser. (Flag cross-contact if it matters that night.)",
@@ -250,6 +259,7 @@ PLACES.forEach(p => {
   const siteLink = p.site ? `<a href="${p.site}" target="_blank" rel="noopener">More info</a> · ` : '';
   m.bindPopup(
     `<b>${p.emoji} ${p.name}</b><br>${p.addr||''}<br>`+
+    (p.penciled?`<b style="color:#b5740f">✏️ Penciled · ${p.penciled}</b><br>`:'')+
     siteLink + `<a href="${mapUrl(p)}" target="_blank" rel="noopener">Map</a>`
   );
   bounds.push([p.lat,p.lon]);
@@ -282,7 +292,8 @@ SECTIONS.forEach(sec => {
     const mapBtn = `<a class="${p.site?'ghost':'primary'}" href="${mapUrl(p)}" target="_blank" rel="noopener">Map &amp; directions ↗</a>`;
     const siteBtn = p.site ? `<a class="primary" href="${p.site}" target="_blank" rel="noopener">More info ↗</a>` : '';
     el.innerHTML =
-      `<h3>${p.emoji} ${p.name} <span class="pill ${p.cat}">${sec.title.replace(/^\S+\s/,'')}</span></h3>`+
+      `<h3>${p.emoji} ${p.name} <span class="pill ${p.cat}">${sec.title.replace(/^\S+\s/,'')}</span>${p.penciled?` <span class="pill pencil">✏️ PENCILED</span>`:''}</h3>`+
+      (p.penciled?`<div class="pencilnote">✏️ Penciled · ${p.penciled}</div>`:'')+
       `<div class="tagline">${p.tagline}</div>`+
       `<div class="blurb">${p.blurb}</div>`+
       `<div class="meta">📍 ${p.addr} · 🚗 ${p.drive} from Esclimont</div>`+

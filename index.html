@@ -135,7 +135,7 @@ const DAYS = [
       {t:"Matisse exhibit at the Grand Palais — 11:30am", s:"set", note:"kids free (bring passports as proof of under-18); adults cheap — optional, but the building alone is stunning"},
       {t:"Seine boat ride — be there 6:30pm, cruise at 7pm", s:"set", note:"sightseeing, not a dinner cruise"}
     ],
-    dinner:{t:"Angelo — 5:00pm (early, before the boat)", s:"set", note:"Italian near the Eiffel — early seating so you make the 6:30/7pm cruise"},
+    dinner:{t:"Angelo — 5:00pm (early, before the boat)", s:"set", note:"Italian at 197 Rue de Grenelle (7th), near the Eiffel — early seating so you make the 6:30/7pm cruise"},
     adhoc:true, todos:["Bring passports to the Grand Palais (proof of under-18 for free kid entry)","🦴 ~10am Paris: book 4 Catacombs self-guided tickets for the 22nd — rolling 7-day release, sells out in minutes (<a href='https://www.catacombes.paris.fr/en' target='_blank' rel='noopener'>official site</a>)"] },
 
   { date:"Thu Jul 16", seg:1,
@@ -148,7 +148,10 @@ const DAYS = [
     dinner:{t:"TBD", s:"tbd"}, adhoc:false,
     todos:["Decide which Chartres day for Versailles, then book the bike tour","Pick a dinner (Chartres town or near the Airbnb)"] },
 
-  { date:"Sat Jul 18", seg:1, acts:[{t:"Open", s:"tbd"}], dinner:{t:"TBD", s:"tbd"}, adhoc:false, todos:[] },
+  { date:"Sat Jul 18", seg:1,
+    acts:[{t:"Chartres en Lumières — light show ~10:30pm (free; the cathedral + ~30 buildings lit up)", s:"pencil", note:"after dinner, post up on Cobalt's terrace — it faces the cathedral and serves till 1am, so you can settle in for the show"}],
+    dinner:{t:"Cobalt — 7:30pm", s:"pencil", note:"penciled while the date is confirmed · terrace for 8 at the foot of the cathedral; Mediterranean small plates, menu marks sans gluten", link:"https://www.cobalt-chartres.com/"},
+    adhoc:true, todos:["Confirm the Cobalt reservation date (penciled for the 18th)","Daytime: pair with the cathedral / old town / Maison Picassiette — see the <a href='chartres.html'>Chartres board</a>"] },
   { date:"Sun Jul 19", seg:1, acts:[{t:"Open", s:"tbd"}], dinner:{t:"TBD", s:"tbd"}, adhoc:false, todos:[] },
   { date:"Mon Jul 20", seg:1, acts:[{t:"Open", s:"tbd"}], dinner:{t:"TBD", s:"tbd"}, adhoc:false, todos:[] },
 
@@ -209,7 +212,7 @@ DAYS.forEach(d => {
      </div>
      <div class="row"><div class="k">Activity</div><div class="v">${actsHTML}</div></div>
      <div class="row"><div class="k">Dinner</div><div class="v">${dinnerV} ${tag(d.dinner.s)}${d.dinner.note?` <span class="anote">· ${d.dinner.note}</span>`:''}</div></div>` +
-    (d.adhoc ? `<div class="row"><div class="k">B&amp;L</div><div class="v adhoc">Breakfast &amp; lunch ad-hoc — <a href="https://crumley.github.io/paris-gf-dining/" target="_blank" rel="noopener">food map</a></div></div>` : '') +
+    (d.adhoc ? `<div class="row"><div class="k">B&amp;L</div><div class="v adhoc">Breakfast &amp; lunch ad-hoc — <a href="${d.seg===1?'chartres.html':'https://crumley.github.io/paris-gf-dining/'}" target="_blank" rel="noopener">${d.seg===1?'Chartres board':'food map'}</a></div></div>` : '') +
     (d.todos.length ? `<ul class="todos">${d.todos.map(t=>`<li>${t}</li>`).join('')}</ul>` : '');
   host.appendChild(el);
 });
