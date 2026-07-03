@@ -39,6 +39,8 @@
   .pill.ent{background:var(--ent)} .pill.eat{background:var(--eat)} .pill.wine{background:var(--wine)}
   .pill.pencil{background:#c9821a}
   .pencilnote{font-size:.82rem;font-weight:700;color:#b5740f;margin:7px 0 0}
+  .pill.booked{background:#1f7a3d}
+  .bookednote{font-size:.82rem;font-weight:700;color:#1f7a3d;margin:7px 0 0}
   .tagline{font-weight:600;margin:8px 0 2px;font-size:.97rem}
   .blurb{color:#3b3f47;font-size:.92rem;margin:6px 0 10px;flex:1}
   .blurb a{color:var(--wine);font-weight:600}
@@ -147,9 +149,9 @@ const PLACES = [
 
   // ---- EATING (Chartres, ~25–30 min) ----
   { name:"Cobalt", cat:"eat", emoji:"🍽️",
-    penciled:"Sat Jul 18 · 7:30pm · terrace for 8 (confirming date)",
+    booked:"Sat Jul 18 · 7:30pm · terrace for 8",
     tagline:"Mediterranean small plates on a terrace facing the cathedral",
-    blurb:"Penciled for the 18th: a buzzy spot right at the foot of the cathedral doing Mediterranean mezze and shareable plates — tarama with truffle, tuna tartare, burrata, veal Milanese — with wine and cocktails, and the menu flags <b>sans gluten</b>. The terrace looks straight at the cathedral, and it's open till 1am, so after a 7:30 dinner you can stay put and watch the ~10:30 illuminations light it up without moving.",
+    blurb:"Booked for the 18th: a buzzy spot right at the foot of the cathedral doing Mediterranean mezze and shareable plates — tarama with truffle, tuna tartare, burrata, veal Milanese — with wine and cocktails, and the menu flags <b>sans gluten</b>. The terrace looks straight at the cathedral, and it's open till 1am, so after a 7:30 dinner you can stay put and watch the ~10:30 illuminations light it up without moving.",
     addr:"1 Rue Fulbert, Chartres", drive:"~25–30 min",
     site:"https://www.cobalt-chartres.com/",
     lat:48.446819, lon:1.487581 },
@@ -259,7 +261,7 @@ PLACES.forEach(p => {
   const siteLink = p.site ? `<a href="${p.site}" target="_blank" rel="noopener">More info</a> · ` : '';
   m.bindPopup(
     `<b>${p.emoji} ${p.name}</b><br>${p.addr||''}<br>`+
-    (p.penciled?`<b style="color:#b5740f">✏️ Penciled · ${p.penciled}</b><br>`:'')+
+    (p.booked?`<b style="color:#1f7a3d">✓ Booked · ${p.booked}</b><br>`:p.penciled?`<b style="color:#b5740f">✏️ Penciled · ${p.penciled}</b><br>`:'')+
     siteLink + `<a href="${mapUrl(p)}" target="_blank" rel="noopener">Map</a>`
   );
   bounds.push([p.lat,p.lon]);
@@ -292,8 +294,8 @@ SECTIONS.forEach(sec => {
     const mapBtn = `<a class="${p.site?'ghost':'primary'}" href="${mapUrl(p)}" target="_blank" rel="noopener">Map &amp; directions ↗</a>`;
     const siteBtn = p.site ? `<a class="primary" href="${p.site}" target="_blank" rel="noopener">More info ↗</a>` : '';
     el.innerHTML =
-      `<h3>${p.emoji} ${p.name} <span class="pill ${p.cat}">${sec.title.replace(/^\S+\s/,'')}</span>${p.penciled?` <span class="pill pencil">✏️ PENCILED</span>`:''}</h3>`+
-      (p.penciled?`<div class="pencilnote">✏️ Penciled · ${p.penciled}</div>`:'')+
+      `<h3>${p.emoji} ${p.name} <span class="pill ${p.cat}">${sec.title.replace(/^\S+\s/,'')}</span>${p.booked?` <span class="pill booked">✓ BOOKED</span>`:p.penciled?` <span class="pill pencil">✏️ PENCILED</span>`:''}</h3>`+
+      (p.booked?`<div class="bookednote">✓ Booked · ${p.booked}</div>`:p.penciled?`<div class="pencilnote">✏️ Penciled · ${p.penciled}</div>`:'')+
       `<div class="tagline">${p.tagline}</div>`+
       `<div class="blurb">${p.blurb}</div>`+
       `<div class="meta">📍 ${p.addr} · 🚗 ${p.drive} from Esclimont</div>`+
