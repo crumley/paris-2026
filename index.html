@@ -96,7 +96,7 @@ const PINNED = [
 ];
 
 const DECISIONS = [
-  "🦴 <b>Catacombs (Jul 22):</b> book 4 <b>self-guided</b> tickets the moment they release — <b>~10am Paris on Jul 15</b> (sells out in minutes). 📅 <a href='catacombs-reminder.ics'>Add the reminder to your calendar</a>. Meanwhile keep refreshing the guided tours for a 4-seat slot (links on the 22nd). <i>Orsay ✓ booked; Louvre still open if we want it.</i>",
+  "🦴 <b>Catacombs (Jul 22) ✓ covered:</b> booked Headout <b>Reserved Access + audioguide, 2:00pm</b> (4 adults), refundable until the day before. Still hoping to <b>upgrade to a private guided tour</b> (cancel this if we land one); cheaper official self-guided tickets are the fallback at the ~Jul 15 release. 📅 <a href='catacombs-reminder.ics'>reminder</a>. <i>Orsay ✓ booked; Louvre still open if we want it.</i>",
   "<b>Paris dinners all booked</b> — Café de Mars (12th), Tasca (13th), Su Misura (14th), Angelo (15th). On hand to swap in: <b>Le Bouchon Parisien</b> (GF-friendly, near the Eiffel) &amp; <b>LouLou</b> (Italian, Tuileries/1st).",
   "<b>Fireworks moved to Jul 13</b> this year (Eiffel ~11pm, Champ de Mars/Trocadéro) — the parade + flyover are still Jul 14 at 10am. Pick a viewing spot for the 13th; get to the Champs-Élysées early on the 14th.",
   "<b>Chartres (5 days):</b> options gathered on the <a href='chartres.html'>🏰 Chartres board</a> (do / eat / wine + map). Versailles bike tour (Marie Antoinette's Hamlet) is the leading idea — penciled to Fri Jul 17, still needs a day + booking. Other days open (cathedral + en Lumières, Espace Rambouillet, Maintenon, Thoiry).",
@@ -136,7 +136,7 @@ const DAYS = [
       {t:"Seine boat ride — be there 6:30pm, cruise at 7pm", s:"set", note:"sightseeing, not a dinner cruise"}
     ],
     dinner:{t:"Angelo — 5:00pm (early, before the boat)", s:"set", note:"Italian at 197 Rue de Grenelle (7th), near the Eiffel — early seating so you make the 6:30/7pm cruise"},
-    adhoc:true, todos:["Bring passports to the Grand Palais (proof of under-18 for free kid entry)","🦴 ~10am Paris: book 4 Catacombs self-guided tickets for the 22nd — rolling 7-day release, sells out in minutes (<a href='https://www.catacombes.paris.fr/en' target='_blank' rel='noopener'>official site</a>)"] },
+    adhoc:true, todos:["Bring passports to the Grand Palais (proof of under-18 for free kid entry)","🦴 Optional: cheaper official self-guided Catacombs tickets for the 22nd release ~10am (rolling 7-day) — grab them and cancel the Headout hold if you prefer (<a href='https://www.catacombes.paris.fr/en' target='_blank' rel='noopener'>official site</a>)"] },
 
   { date:"Thu Jul 16", seg:1,
     acts:[{t:"Check out the 7th by noon, train Paris → Chartres (~1 hr), then on to the Esclimont Airbnb — cathedral on arrival?", s:"tbd"}],
@@ -162,11 +162,11 @@ const DAYS = [
 
   { date:"Wed Jul 22", seg:2,
     acts:[
-      {t:"Catacombs (4 of us)", s:"pencil", note:"plan: self-guided tickets booked Jul 15, or a guided tour if a 4-seat slot opens · Denfert-Rochereau (14th), ~30 min metro from Palais Royal"},
+      {t:"Catacombs — Reserved Access + audioguide, 2:00pm (4 adults)", s:"set", note:"booked via Headout (skip-the-line + audioguide), refundable until the day before — still trying to upgrade to a private guided tour, else keep this · Denfert-Rochereau (14th), ~30 min metro from Palais Royal"},
       {t:"Otherwise a relaxed last day — Palais Royal, Louvre, shopping", s:"tbd"}
     ],
     dinner:{t:"Final Paris dinner — make it a good one?", s:"tbd"},
-    adhoc:true, todos:["Pick the final-night dinner","Keep refreshing guided Catacombs tours for a 4-seat slot on the 22nd: <a href='https://www.getyourguide.com/paris-catacombs-l2605/' target='_blank' rel='noopener'>GetYourGuide</a> · <a href='https://www.takewalks.com/paris-tours/paris-catacombs-tour/' target='_blank' rel='noopener'>Walks</a> · <a href='https://www.tiqets.com/en/things-to-do-in-paris-c66746/tickets-for-catacombs-of-paris-guided-tour-p978144/' target='_blank' rel='noopener'>Tiqets</a> · <a href='https://www.headout.com/paris-catacombs-tour-c-253/' target='_blank' rel='noopener'>Headout</a> · <a href='https://www.viator.com/Paris-attractions/Paris-Catacombs-Catacombes-de-Paris/d479-a590' target='_blank' rel='noopener'>Viator</a>","Keep the evening free for the final dinner","Any must-do left before we fly?"] },
+    adhoc:true, todos:["Pick the final-night dinner","🦴 Catacombs is covered (Headout 2pm, refundable to the day before). Optional upgrade: book a <b>private guided tour</b> and cancel this — or grab cheaper official tickets at the 7-day release. Guided options: <a href='https://www.getyourguide.com/paris-catacombs-l2605/' target='_blank' rel='noopener'>GetYourGuide</a> · <a href='https://www.takewalks.com/paris-tours/paris-catacombs-tour/' target='_blank' rel='noopener'>Walks</a> · <a href='https://www.tiqets.com/en/things-to-do-in-paris-c66746/tickets-for-catacombs-of-paris-guided-tour-p978144/' target='_blank' rel='noopener'>Tiqets</a> · <a href='https://www.headout.com/paris-catacombs-tour-c-253/' target='_blank' rel='noopener'>Headout</a> · <a href='https://www.viator.com/Paris-attractions/Paris-Catacombs-Catacombes-de-Paris/d479-a590' target='_blank' rel='noopener'>Viator</a>","Keep the evening free for the final dinner","Any must-do left before we fly?"] },
 
   { date:"Thu Jul 23", seg:2,
     acts:[{t:"Depart — checkout ~8:30am, taxi to CDG (flight ~12:25pm)", s:"set"}],
