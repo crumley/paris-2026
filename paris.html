@@ -9,7 +9,7 @@
   integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <style>
   :root{
-    --do:#2f8f9d; --see:#2f6fdb; --eat:#d2553b; --drink:#8a1f3d; --shop:#8a5cd1;
+    --do:#2f8f9d; --see:#2f6fdb; --eat:#d2553b; --drink:#8a1f3d; --shop:#8a5cd1; --coffee:#7a4a2b;
     --ink:#22242a; --muted:#6a6f7a; --bg:#f7f6f2; --card:#fff; --line:#e7e3da;
   }
   *{box-sizing:border-box}
@@ -38,7 +38,7 @@
   .card h3{margin:0;font-size:1.14rem;display:flex;align-items:center;gap:8px;line-height:1.25;flex-wrap:wrap}
   .pill{font-size:.66rem;font-weight:700;color:#fff;border-radius:999px;padding:2px 9px;white-space:nowrap}
   .pill.do{background:var(--do)} .pill.see{background:var(--see)} .pill.eat{background:var(--eat)}
-  .pill.drink{background:var(--drink)} .pill.shop{background:var(--shop)}
+  .pill.drink{background:var(--drink)} .pill.shop{background:var(--shop)} .pill.coffee{background:var(--coffee)}
   .src{display:inline-block;font-size:.72rem;font-weight:700;color:#7a4ec0;background:#f2ecfb;
     border-radius:999px;padding:2px 9px;margin:8px 0 0}
   .tagline{font-weight:600;margin:8px 0 2px;font-size:.97rem}
@@ -73,6 +73,7 @@
     <span><span class="dot" style="background:var(--do)"></span><b>Do</b></span>
     <span><span class="dot" style="background:var(--see)"></span><b>See</b></span>
     <span><span class="dot" style="background:var(--eat)"></span><b>Eat</b></span>
+    <span><span class="dot" style="background:var(--coffee)"></span><b>Coffee</b></span>
     <span><span class="dot" style="background:var(--drink)"></span><b>Drink</b></span>
     <span><span class="dot" style="background:var(--shop)"></span><b>Shop</b></span>
   </div>
@@ -88,8 +89,8 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
-const COLORS = {do:'#2f8f9d', see:'#2f6fdb', eat:'#d2553b', drink:'#8a1f3d', shop:'#8a5cd1'};
-const CATLABEL = {do:'Do', see:'See', eat:'Eat', drink:'Drink', shop:'Shop'};
+const COLORS = {do:'#2f8f9d', see:'#2f6fdb', eat:'#d2553b', drink:'#8a1f3d', shop:'#8a5cd1', coffee:'#7a4a2b'};
+const CATLABEL = {do:'Do', see:'See', eat:'Eat', drink:'Drink', shop:'Shop', coffee:'Coffee'};
 
 // Areas render top-to-bottom in this order.
 const AREAS = [
@@ -99,6 +100,8 @@ const AREAS = [
     sub:"A little east of the Marais — good for a wander or a specific stop." },
   { key:"palaisroyal", title:"Palais Royal & Louvre · 1st & 2nd",
     sub:"Around the second hotel (Jul 21–23) — stash things here for the back half of the trip." },
+  { key:"grands", title:"Champs-Élysées & Grands Boulevards · 8th & 9th",
+    sub:"West and north of the center — a couple of destination cafés worth a special trip." },
 ];
 
 const PLACES = [
@@ -150,6 +153,44 @@ const PLACES = [
     blurb:"The branch of the all-gluten-free bakery nearest your second hotel — a short walk for GF croissants and a grab-and-go breakfast during the Jul 21–23 stay. Same dedicated-GF kitchen as the Marais one.",
     addr:"60 Rue Tiquetonne, 75002",
     site:"https://www.copains-paris.com/en/", lat:48.864820, lon:2.346050 },
+
+  // ---- COFFEE (from /last30days research) ----
+  { name:"Fringe Coffee", area:"marais", cat:"coffee", emoji:"☕",
+    src:"From /last30days research",
+    tagline:"Single-origin espresso + a photo gallery (Haut Marais)",
+    blurb:"A well-loved specialty espresso bar in the upper Marais — single-origin beans from local roasters, doubling as a small photography gallery. A few minutes from Repetto and Copains, so it's the easy great-coffee stop while you're shopping today.",
+    addr:"106 Rue de Turenne, 75003",
+    site:"https://www.fringecoffeeparis.com/", lat:48.862772, lon:2.364778 },
+  { name:"Terres de Café", area:"marais", cat:"coffee", emoji:"☕",
+    src:"From /last30days research",
+    tagline:"The name most tied to Paris specialty coffee",
+    blurb:"One of the roasters most associated with specialty coffee in Paris, with its original shop right here in the Marais (and branches all over the city). Serious beans and roasts if you want to go a bit deeper — and it's around the corner from Copains.",
+    addr:"36 Rue des Blancs-Manteaux, 75004",
+    site:"https://www.terresdecafe.com/", lat:48.859631, lon:2.355541 },
+  { name:"Télescope", area:"palaisroyal", cat:"coffee", emoji:"☕",
+    src:"From /last30days research",
+    tagline:"Pour-over purists' pick — steps from the second hotel",
+    blurb:"A tiny, long-running multi-roaster café tucked on a cobbled street in the 1st — the pour-over-purist pick that keeps coming up in the guides. A short walk from the Grand Hôtel du Palais Royal, so it's your go-to morning coffee for the Jul 21–23 stay.",
+    addr:"5 Rue Villédo, 75001",
+    lat:48.866180, lon:2.336267 },
+  { name:"Substance Café", area:"palaisroyal", cat:"coffee", emoji:"☕",
+    src:"From /last30days research",
+    tagline:"The other pour-over pick, in the 2nd",
+    blurb:"A specialty roaster-café in the 2nd, paired with Télescope by the LA Times as where pour-over purists should head. Calm and coffee-forward, an easy detour from the Louvre / Palais Royal side of town.",
+    addr:"30 Rue Dussoubs, 75002",
+    site:"https://www.substancecafe.com/", lat:48.866263, lon:2.349160 },
+  { name:"Bacha Coffee", area:"grands", cat:"coffee", emoji:"✨",
+    src:"From /last30days research · viral this month",
+    tagline:"A Moroccan \"coffee palace\" on the Champs-Élysées",
+    blurb:"The wow-factor stop: a 1,500 m² Moroccan-style coffee palace (sister to Marrakech's Dar el Bacha) that opened on the Champs-Élysées in 2025, pouring 200 different 100% arabicas amid gilded rooms — you can drink in, eat, and buy gift tins. A viral reel (64K views) called it \"worth a special trip.\" A teens-will-remember-it outing.",
+    addr:"26 Avenue des Champs-Élysées, 75008",
+    site:"https://bachacoffee.com/", lat:48.869769, lon:2.308775 },
+  { name:"Printemps Rooftop (Deli-Cieux)", area:"grands", cat:"coffee", emoji:"🗼",
+    src:"From /last30days research · viral this month",
+    tagline:"Free Eiffel Tower view + coffee, no purchase required",
+    blurb:"The hack going viral on TikTok this month: ride to Floor 9 of Printemps (the Home store) for the Deli-Cieux café and a free 360° panorama — Eiffel Tower one way, Sacré-Cœur the other. Same view as the paid spots, but you can sit down with a coffee. No purchase required to go up.",
+    addr:"Printemps Haussmann, 64 Boulevard Haussmann, 75009",
+    site:"https://www.printemps.com/", lat:48.873887, lon:2.329051 },
 ];
 
 function mapUrl(p){
