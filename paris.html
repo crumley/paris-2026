@@ -97,8 +97,10 @@ const CATLABEL = {do:'Do', see:'See', eat:'Eat', drink:'Drink', shop:'Shop', cof
 
 // Areas render top-to-bottom in this order.
 const AREAS = [
-  { key:"marais", title:"Le Marais · 3rd & 4th", today:true,
-    sub:"Where you're headed today — shopping + wander. Everything here is walkable from everything else." },
+  { key:"marais", title:"Le Marais · 3rd & 4th",
+    sub:"Shopping + wander — everything here is walkable from everything else." },
+  { key:"sept", title:"Rive Gauche · 7th (near the first hotel)",
+    sub:"Around Hôtel Bourgogne & Montana (Jul 12–16) — the specialty coffee is a 10–15 min walk west." },
   { key:"east", title:"Canal & Oberkampf · 10th & 11th",
     sub:"A little east of the Marais — good for a wander or a specific stop." },
   { key:"palaisroyal", title:"Palais Royal & Louvre · 1st & 2nd",
@@ -194,6 +196,26 @@ const PLACES = [
     blurb:"The hack going viral on TikTok this month: ride to Floor 9 of Printemps (the Home store) for the Deli-Cieux café and a free 360° panorama — Eiffel Tower one way, Sacré-Cœur the other. Same view as the paid spots, but you can sit down with a coffee. No purchase required to go up.",
     addr:"Printemps Haussmann, 64 Boulevard Haussmann, 75009",
     site:"https://www.printemps.com/", lat:48.873887, lon:2.329051 },
+
+  // ---- COFFEE near the first hotel (7th) ----
+  { name:"The Coffee (Invalides)", area:"sept", cat:"coffee", emoji:"☕",
+    src:"From /last30days research",
+    tagline:"Closest specialty coffee to the first hotel (~10 min)",
+    blurb:"A bright, modern specialty bar doing Brazilian beans with Japanese-style pour-over plus solid espresso — the nearest genuinely good coffee to Hôtel Bourgogne & Montana. It's on Rue Saint-Dominique, one of the 7th's best strolling streets (bakeries, shops, the Eiffel framed at the far end), so the walk is half the fun. If it's full, Le Seven's Coffee is right next door at no. 58.",
+    addr:"73 Rue Saint-Dominique, 75007",
+    site:"https://thecoffee.jp/", lat:48.859815, lon:2.309227 },
+  { name:"Coutume Café", area:"sept", cat:"coffee", emoji:"☕",
+    src:"From /last30days research",
+    tagline:"The 7th's landmark roaster (~15 min)",
+    blurb:"The destination pick: on-site roasting by a former Meilleur Torréfacteur de France, near Le Bon Marché, with a proper sit-down brunch and light-lunch menu. Worth the longer walk if you want the famous one rather than a cup to go.",
+    addr:"47 Rue de Babylone, 75007",
+    site:"https://coutumecafe.com/", lat:48.851678, lon:2.318364 },
+  { name:"Certified Café · Beaupassage", area:"sept", cat:"coffee", emoji:"☕",
+    src:"From /last30days research",
+    tagline:"Third-wave coffee in a pretty courtyard (~13 min)",
+    blurb:"Specialty coffee tucked inside the gorgeous Beaupassage food courtyard on Rue de Grenelle — the calm, photogenic option for a coffee and a pastry, paired with a wander past its food artisans.",
+    addr:"53 Rue de Grenelle, 75007",
+    lat:48.854369, lon:2.325170 },
 ];
 
 function mapUrl(p){
