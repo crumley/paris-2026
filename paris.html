@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Paris Ideas Board · Do, See, Eat &amp; Shop</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<style>
+  :root{
+    --do:#2f8f9d; --see:#2f6fdb; --eat:#d2553b; --drink:#8a1f3d; --shop:#8a5cd1;
+    --ink:#22242a; --muted:#6a6f7a; --bg:#f7f6f2; --card:#fff; --line:#e7e3da;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.5}
+  header{padding:26px 20px 8px;max-width:980px;margin:0 auto}
+  h1{margin:0 0 6px;font-size:1.6rem;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:1rem;margin:0 0 4px}
+  .back{display:inline-block;margin:10px 0 2px;font-size:.85rem;font-weight:600;text-decoration:none;
+    background:#22242a;color:#fff;padding:8px 13px;border-radius:9px}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px 60px}
+  .caveat{font-size:.9rem;color:#234;background:#eef4fb;border:1px solid #cfe0f2;
+    border-left:4px solid var(--see);border-radius:12px;padding:12px 15px;margin:14px 0 4px}
+  #map{height:460px;width:100%;border-radius:14px;border:1px solid var(--line);margin:14px 0 14px;
+    box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 10px;font-size:.9rem;color:var(--muted)}
+  .legend b{color:var(--ink)}
+  .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .secthead{display:flex;align-items:center;gap:9px;margin:30px 0 2px;font-size:1.28rem;font-weight:700}
+  .secthead .todaytag{font-size:.66rem;font-weight:800;letter-spacing:.04em;color:#fff;background:#1f7a3d;
+    border-radius:999px;padding:3px 9px}
+  .sectsub{color:var(--muted);font-size:.9rem;margin:2px 0 14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+    box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column}
+  .card h3{margin:0;font-size:1.14rem;display:flex;align-items:center;gap:8px;line-height:1.25;flex-wrap:wrap}
+  .pill{font-size:.66rem;font-weight:700;color:#fff;border-radius:999px;padding:2px 9px;white-space:nowrap}
+  .pill.do{background:var(--do)} .pill.see{background:var(--see)} .pill.eat{background:var(--eat)}
+  .pill.drink{background:var(--drink)} .pill.shop{background:var(--shop)}
+  .src{display:inline-block;font-size:.72rem;font-weight:700;color:#7a4ec0;background:#f2ecfb;
+    border-radius:999px;padding:2px 9px;margin:8px 0 0}
+  .tagline{font-weight:600;margin:8px 0 2px;font-size:.97rem}
+  .blurb{color:#3b3f47;font-size:.92rem;margin:6px 0 10px;flex:1}
+  .blurb a{color:var(--drink);font-weight:600}
+  .meta{font-size:.83rem;color:var(--muted);margin-bottom:10px}
+  .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto}
+  .links a{font-size:.84rem;font-weight:600;text-decoration:none;padding:7px 12px;border-radius:9px;border:1px solid var(--line)}
+  .links a.primary{background:#22242a;color:#fff;border-color:#22242a}
+  .links a.ghost{background:#fff;color:#22242a}
+  .leaflet-marker-pin{display:flex;align-items:center;justify-content:center;width:30px;height:30px;
+    border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.35);font-size:14px}
+  .leaflet-marker-pin span{transform:rotate(45deg)}
+  .note{font-size:.88rem;color:#3b3f47;margin:26px 0 0;padding:15px 17px;background:#fff;
+    border:1px solid var(--line);border-radius:12px}
+  .note b{color:var(--ink)}
+  footer{max-width:980px;margin:0 auto;padding:0 20px 40px;color:var(--muted);font-size:.82rem}
+</style>
+</head>
+<body>
+<header>
+  <h1>🗺️ Paris Ideas Board</h1>
+  <p class="sub">A running list of things to do, see, eat &amp; shop — grouped by neighborhood. Tap a pin or a card for more info. We add to this as we go.</p>
+  <a class="back" href="./">← Back to the schedule</a>
+</header>
+<div class="wrap">
+  <div class="caveat">
+    📌 <b>Living list.</b> Drop me a place, an address, or a TikTok/Instagram link and I'll pin it here in the right neighborhood. Items saved from your TikToks are tagged.
+  </div>
+  <div id="map"></div>
+  <div class="legend">
+    <span><span class="dot" style="background:var(--do)"></span><b>Do</b></span>
+    <span><span class="dot" style="background:var(--see)"></span><b>See</b></span>
+    <span><span class="dot" style="background:var(--eat)"></span><b>Eat</b></span>
+    <span><span class="dot" style="background:var(--drink)"></span><b>Drink</b></span>
+    <span><span class="dot" style="background:var(--shop)"></span><b>Shop</b></span>
+  </div>
+  <div id="sections"></div>
+  <div class="note">
+    <b>How this works:</b> everything lives in one list grouped by area, so when a plan changes (a museum's closed, it's raining, we're already in a neighborhood) you can glance at the map and grab something nearby. Say the word and I'll add, remove, or reshuffle pins.
+  </div>
+</div>
+<footer>
+  Map data © OpenStreetMap contributors. Unlisted working doc for our July trip · not indexed.
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const COLORS = {do:'#2f8f9d', see:'#2f6fdb', eat:'#d2553b', drink:'#8a1f3d', shop:'#8a5cd1'};
+const CATLABEL = {do:'Do', see:'See', eat:'Eat', drink:'Drink', shop:'Shop'};
+
+// Areas render top-to-bottom in this order.
+const AREAS = [
+  { key:"marais", title:"Le Marais · 3rd & 4th", today:true,
+    sub:"Where you're headed today — shopping + wander. Everything here is walkable from everything else." },
+  { key:"east", title:"Canal & Oberkampf · 10th & 11th",
+    sub:"A little east of the Marais — good for a wander or a specific stop." },
+  { key:"palaisroyal", title:"Palais Royal & Louvre · 1st & 2nd",
+    sub:"Around the second hotel (Jul 21–23) — stash things here for the back half of the trip." },
+];
+
+const PLACES = [
+  // ---- LE MARAIS ----
+  { name:"Repetto", area:"marais", cat:"shop", emoji:"🩰",
+    src:"Saved from TikTok · @christa.jpg",
+    tagline:"Made-in-France ballet flats — the Marais boutique",
+    blurb:"The iconic French ballerine, handmade in the Dordogne since 1947 — soft leather flats in a wall of colors, plus Mary Janes and dancewear. This is the Marais store (there's also one by the Opéra). The ballet-flat stop from your saved video.",
+    addr:"51 Rue des Francs Bourgeois, 75004",
+    site:"https://repetto.com/en/", lat:48.858890, lon:2.358339 },
+  { name:"Copains · Marais", area:"marais", cat:"eat", emoji:"🥐",
+    src:"Saved from TikTok · @glutenfreegal",
+    tagline:"100% gluten-free bakery — croissants & pain au choc",
+    blurb:"A fully dedicated <b>gluten-free</b> bakery (no cross-contact worries) that people rave about — GF croissants, pain au chocolat, filled baguettes and focaccia to go. The Marais branch is a couple minutes from Repetto, so it's an easy pastry stop while shopping.",
+    addr:"29 Rue des Blancs-Manteaux, 75004",
+    site:"https://www.copains-paris.com/en/", lat:48.859371, lon:2.355828 },
+  { name:"Merci", area:"marais", cat:"shop", emoji:"🛍️",
+    tagline:"Cult concept store — design, fashion, flowers, cafés",
+    blurb:"The famous concept store behind the little red Fiat in the courtyard: three floors of design, homeware, fashion and stationery, with a flower market and a couple of cafés. Great for browsing and gifts even if you buy nothing.",
+    addr:"111 Boulevard Beaumarchais, 75003",
+    site:"https://www.merci-merci.com/en", lat:48.860723, lon:2.367033 },
+  { name:"Marché des Enfants Rouges", area:"marais", cat:"eat", emoji:"🍲",
+    tagline:"Paris's oldest covered market — food stalls for lunch",
+    blurb:"A covered market from 1615, now a warren of food stalls — Moroccan, Italian, Japanese, French, crêpes — with communal tables. The move for an easy, everyone-picks-their-own lunch in the middle of a Marais wander. (Closed Mondays.)",
+    addr:"39 Rue de Bretagne, 75003",
+    lat:48.862792, lon:2.361978 },
+  { name:"Place des Vosges", area:"marais", cat:"see", emoji:"🌳",
+    tagline:"Paris's oldest planned square — arcades & a garden",
+    blurb:"A perfect 1612 square of matching red-brick pavilions over shaded arcades, with a garden in the middle to sit in. Victor Hugo's house is on the corner (free to visit). A calm, pretty pause between shops.",
+    addr:"Place des Vosges, 75004",
+    lat:48.855066, lon:2.365331 },
+  { name:"L'As du Fallafel", area:"marais", cat:"eat", emoji:"🧆",
+    tagline:"The rue des Rosiers falafel institution",
+    blurb:"The legendary falafel window on the old Jewish street — order at the hatch and eat on the go, or sit inside. Cheap, huge, delicious. (Heads-up: the pita is not gluten-free; the GF crew should plan around it — Copains is a block away.)",
+    addr:"34 Rue des Rosiers, 75004",
+    lat:48.857410, lon:2.359049 },
+
+  // ---- CANAL / OBERKAMPF ----
+  { name:"Café Pli", area:"east", cat:"do", emoji:"✉️",
+    src:"Saved from TikTok · @alexzouaghi",
+    tagline:"Write a letter to your future self — mailed in 1, 5 or 20 years",
+    blurb:"Europe's first \"letter café\": pick stationery and stickers, order a coffee, and write a letter to your future self — they file it in a wall of days and post it back to you on the date you choose (even if you've moved). A lovely, low-key thing to do together; ~€15 (1 year, drink included) to €25 (5 years). A memorable family keepsake from the trip.",
+    addr:"38 Rue du Faubourg du Temple, 75011",
+    site:"https://www.cafe-pli.fr/en/", lat:48.869153, lon:2.368751 },
+
+  // ---- PALAIS ROYAL / LOUVRE ----
+  { name:"Copains · Tiquetonne", area:"palaisroyal", cat:"eat", emoji:"🥐",
+    tagline:"Gluten-free bakery closest to the Palais Royal hotel",
+    blurb:"The branch of the all-gluten-free bakery nearest your second hotel — a short walk for GF croissants and a grab-and-go breakfast during the Jul 21–23 stay. Same dedicated-GF kitchen as the Marais one.",
+    addr:"60 Rue Tiquetonne, 75002",
+    site:"https://www.copains-paris.com/en/", lat:48.864820, lon:2.346050 },
+];
+
+function mapUrl(p){
+  return "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(p.name.replace(/ · .*/,'') + ", " + (p.addr||"Paris") + ", France");
+}
+
+// ---- Map ----
+const map = L.map('map', {scrollWheelZoom:false});
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom:19, attribution:'&copy; OpenStreetMap'
+}).addTo(map);
+
+const bounds = [];
+PLACES.forEach(p => {
+  if (p.noMap) return;
+  const icon = L.divIcon({
+    className:'',
+    html:`<div class="leaflet-marker-pin" style="background:${COLORS[p.cat]}"><span>${p.emoji}</span></div>`,
+    iconSize:[30,30], iconAnchor:[15,30], popupAnchor:[0,-28]
+  });
+  const m = L.marker([p.lat,p.lon],{icon}).addTo(map);
+  const siteLink = p.site ? `<a href="${p.site}" target="_blank" rel="noopener">More info</a> · ` : '';
+  m.bindPopup(
+    `<b>${p.emoji} ${p.name}</b><br>${p.addr||''}<br>`+
+    (p.src?`<i style="color:#7a4ec0">${p.src}</i><br>`:'')+
+    siteLink + `<a href="${mapUrl(p)}" target="_blank" rel="noopener">Map</a>`
+  );
+  bounds.push([p.lat,p.lon]);
+});
+map.fitBounds(bounds, {padding:[45,45]});
+
+// ---- Sections by area ----
+const host = document.getElementById('sections');
+AREAS.forEach(area => {
+  const items = PLACES.filter(p => p.area === area.key);
+  if (!items.length) return;
+  const head = document.createElement('div');
+  head.className = 'secthead';
+  head.innerHTML = `${area.title}${area.today?` <span class="todaytag">TODAY</span>`:''}`;
+  host.appendChild(head);
+  const sub = document.createElement('p');
+  sub.className = 'sectsub';
+  sub.textContent = area.sub;
+  host.appendChild(sub);
+
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  items.forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'card';
+    const mapBtn = `<a class="${p.site?'ghost':'primary'}" href="${mapUrl(p)}" target="_blank" rel="noopener">Map &amp; directions ↗</a>`;
+    const siteBtn = p.site ? `<a class="primary" href="${p.site}" target="_blank" rel="noopener">More info ↗</a>` : '';
+    el.innerHTML =
+      `<h3>${p.emoji} ${p.name} <span class="pill ${p.cat}">${CATLABEL[p.cat]}</span></h3>`+
+      (p.src?`<div class="src">📌 ${p.src}</div>`:'')+
+      `<div class="tagline">${p.tagline}</div>`+
+      `<div class="blurb">${p.blurb}</div>`+
+      `<div class="meta">📍 ${p.addr}</div>`+
+      `<div class="links">${siteBtn}${mapBtn}</div>`;
+    grid.appendChild(el);
+  });
+  host.appendChild(grid);
+});
+</script>
+</body>
+</html>
