@@ -52,6 +52,9 @@
   .leaflet-marker-pin{display:flex;align-items:center;justify-content:center;width:30px;height:30px;
     border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.35);font-size:14px}
   .leaflet-marker-pin span{transform:rotate(45deg)}
+  .user-dot{width:16px;height:16px;border-radius:50%;background:#1a73e8;border:3px solid #fff;
+    box-shadow:0 0 0 2px rgba(26,115,232,.35),0 1px 4px rgba(0,0,0,.4)}
+  .leaflet-locate{font-size:17px;line-height:26px;text-align:center;color:#1a73e8;font-weight:700;cursor:pointer}
   .note{font-size:.88rem;color:#3b3f47;margin:26px 0 0;padding:15px 17px;background:#fff;
     border:1px solid var(--line);border-radius:12px}
   .note b{color:var(--ink)}
@@ -222,6 +225,33 @@ PLACES.forEach(p => {
   bounds.push([p.lat,p.lon]);
 });
 map.fitBounds(bounds, {padding:[45,45]});
+
+// ---- Current-location blue dot (geolocation; auto on touch devices) ----
+(function(){
+  let userMarker=null, accCircle=null, watching=false, wantPan=false, panned=false;
+  map.on('locationfound', function(e){
+    const ll=e.latlng, r=e.accuracy||0;
+    if(!userMarker){
+      const dot=L.divIcon({className:'', html:'<div class="user-dot"></div>', iconSize:[18,18], iconAnchor:[9,9]});
+      userMarker=L.marker(ll,{icon:dot, interactive:false, keyboard:false, zIndexOffset:1000}).addTo(map);
+      accCircle=L.circle(ll,{radius:r, color:'#1a73e8', weight:1, fillColor:'#1a73e8', fillOpacity:.12, interactive:false}).addTo(map);
+    } else { userMarker.setLatLng(ll); accCircle.setLatLng(ll).setRadius(r); }
+    if(wantPan && !panned){ panned=true; map.setView(ll, Math.max(map.getZoom(), 14)); }
+  });
+  map.on('locationerror', function(){ /* denied or unavailable — leave the map as-is */ });
+  function locate(pan){
+    if(pan){ wantPan=true; if(userMarker){ panned=true; map.setView(userMarker.getLatLng(), Math.max(map.getZoom(),14)); } }
+    if(!watching){ watching=true; map.locate({watch:true, enableHighAccuracy:true, maximumAge:10000, timeout:15000}); }
+  }
+  const Locate=L.Control.extend({ options:{position:'topleft'}, onAdd:function(){
+    const b=L.DomUtil.create('a','leaflet-bar leaflet-locate');
+    b.href='#'; b.title='Show my location'; b.setAttribute('role','button'); b.setAttribute('aria-label','Show my location'); b.innerHTML='◎';
+    L.DomEvent.on(b,'click',function(ev){ L.DomEvent.stop(ev); locate(true); });
+    return b;
+  }});
+  map.addControl(new Locate());
+  if(window.matchMedia && window.matchMedia('(pointer: coarse)').matches){ locate(false); }
+})();
 
 // ---- Sections by area ----
 const host = document.getElementById('sections');
