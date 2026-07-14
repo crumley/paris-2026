@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Wed Jul 15 · Dinner around the Seine Cruise</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<style>
+  :root{
+    --cruise:#2f6fdb; --top:#1f7a3d; --gf:#2f8f9d; --solid:#d2553b; --splurge:#8a5cd1; --consider:#c9821a;
+    --ink:#22242a; --muted:#6a6f7a; --bg:#f7f6f2; --card:#fff; --line:#e7e3da;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.5}
+  header{padding:26px 20px 8px;max-width:980px;margin:0 auto}
+  h1{margin:0 0 6px;font-size:1.55rem;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:1rem;margin:0 0 4px}
+  .back{display:inline-block;margin:10px 0 2px;font-size:.85rem;font-weight:600;text-decoration:none;
+    background:#22242a;color:#fff;padding:8px 13px;border-radius:9px}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px 60px}
+  .caveat{font-size:.92rem;color:#5a4a2a;background:#fdf6e7;border:1px solid #f0e3c0;
+    border-left:4px solid var(--consider);border-radius:12px;padding:12px 15px;margin:14px 0 4px}
+  .caveat b{color:#3b2f16}
+  #map{height:440px;width:100%;border-radius:14px;border:1px solid var(--line);margin:14px 0 14px;
+    box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 10px;font-size:.86rem;color:var(--muted)}
+  .legend b{color:var(--ink)}
+  .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-top:10px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+    box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;border-top:4px solid #ccc}
+  .card h3{margin:0;font-size:1.16rem;display:flex;align-items:center;gap:8px;line-height:1.25;flex-wrap:wrap}
+  .pill{font-size:.66rem;font-weight:800;color:#fff;border-radius:999px;padding:3px 9px;white-space:nowrap;letter-spacing:.02em}
+  .tagline{font-weight:600;margin:8px 0 2px;font-size:.97rem}
+  .blurb{color:#3b3f47;font-size:.92rem;margin:6px 0 10px}
+  .facts{list-style:none;margin:2px 0 10px;padding:0;font-size:.87rem;color:#3b3f47}
+  .facts li{margin:3px 0;display:flex;gap:7px}
+  .facts .k{flex:0 0 74px;color:var(--muted);font-weight:600}
+  .gfbox{font-size:.86rem;background:#f4f7f5;border:1px solid #e2ebe6;border-radius:10px;padding:9px 11px;margin:2px 0 10px}
+  .gfbox .ok{color:#1f7a3d;font-weight:700}
+  .gfbox .no{color:#b23b4e;font-weight:700}
+  .links{display:flex;gap:9px;flex-wrap:wrap;margin-top:auto}
+  .links a{font-size:.83rem;font-weight:600;text-decoration:none;padding:7px 11px;border-radius:9px;border:1px solid var(--line)}
+  .links a.primary{background:#22242a;color:#fff;border-color:#22242a}
+  .links a.ghost{background:#fff;color:#22242a}
+  .anchor-card{background:#eef4fb;border-color:#cfe0f2;border-top-color:var(--cruise)}
+  .leaflet-marker-pin{display:flex;align-items:center;justify-content:center;width:30px;height:30px;
+    border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.35);font-size:14px}
+  .leaflet-marker-pin span{transform:rotate(45deg)}
+  .user-dot{width:16px;height:16px;border-radius:50%;background:#1a73e8;border:3px solid #fff;
+    box-shadow:0 0 0 2px rgba(26,115,232,.35),0 1px 4px rgba(0,0,0,.4)}
+  .leaflet-locate{font-size:17px;line-height:26px;text-align:center;color:#1a73e8;font-weight:700;cursor:pointer}
+  .note{font-size:.88rem;color:#3b3f47;margin:24px 0 0;padding:15px 17px;background:#fff;
+    border:1px solid var(--line);border-radius:12px}
+  .note b{color:var(--ink)}
+  footer{max-width:980px;margin:0 auto;padding:0 20px 40px;color:var(--muted);font-size:.82rem}
+</style>
+</head>
+<body>
+<header>
+  <h1>🍽️ Wed Jul 15 · Dinner around the Seine cruise</h1>
+  <p class="sub">Options for the group of 7, built around the Seine sightseeing cruise that leaves from the Orsay (~7pm; be there ~6:30). Tap a pin or a card. Blue ◎ button = show my location.</p>
+  <a class="back" href="./">← Back to the schedule</a>
+</header>
+<div class="wrap">
+  <div class="caveat">
+    ⏱️ <b>Timing reality:</b> a <b>5pm pre-cruise dinner doesn't work</b> at any of these - Paris kitchens open for dinner around 7pm (the two bistros at 7:30). The clean plan is <b>cruise ~7pm → dinner ~9pm</b>. If you'd rather eat before, make it a <i>late lunch</i> (~1:30pm) instead.<br><br>
+    🌾 <b>Gluten note:</b> none of these mark allergens or a "sans gluten" menu, so the ratings below are about how many dishes are <i>naturally</i> wheat-free (or easily adapted). Whichever you pick, <b>call and flag it</b> - and ask about shared fryers (frites) and the floured-fish station.
+  </div>
+  <div id="map"></div>
+  <div class="legend">
+    <span><span class="dot" style="background:var(--cruise)"></span><b>Cruise / Orsay</b></span>
+    <span><span class="dot" style="background:var(--top)"></span><b>Top pick for 7</b></span>
+    <span><span class="dot" style="background:var(--gf)"></span><b>Best GF menu</b></span>
+    <span><span class="dot" style="background:var(--solid)"></span><b>Solid all-rounder</b></span>
+    <span><span class="dot" style="background:var(--splurge)"></span><b>Michelin splurge</b></span>
+    <span><span class="dot" style="background:var(--consider)"></span><b>Worth a call</b></span>
+  </div>
+  <div id="cards" class="grid"></div>
+  <div class="note">
+    <b>Quick read:</b> to <b>seat 7 at 9pm with workable gluten-free</b>, <b>Brasserie des Prés</b> is the safest (180 seats). For the <b>friendliest GF menu</b>, <b>Cinq-Mars</b> - if you can squeeze 7 into its ~40 seats. <b>L'Ami Jean</b> shows a 21:00 slot for 6 - the open question is squeezing a 7th or splitting into two adjacent tables (it's famously tight). Big rooms flex; small bistros don't.
+    <br><br><b>Booking tip for 7:</b> the apps cap group size at 6, so a 7-top often shows "unavailable" even when the room has space - <b>call</b> instead, or book 6 and confirm the 7th by phone.
+  </div>
+</div>
+<footer>
+  Map data © OpenStreetMap contributors. Unlisted working doc for our July trip · not indexed.
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const COLORS = {cruise:'#2f6fdb', top:'#1f7a3d', gf:'#2f8f9d', solid:'#d2553b', splurge:'#8a5cd1', consider:'#c9821a'};
+const VLABEL = {cruise:'Cruise / Orsay', top:'Top pick for 7', gf:'Best GF menu', solid:'Solid', splurge:'Michelin splurge', consider:'Worth a call'};
+
+const PLACES = [
+  { name:"Seine cruise · departs by the Orsay", v:"cruise", emoji:"⛴️", anchor:true,
+    tagline:"Sightseeing cruise, ~7pm (be there ~6:30)",
+    blurb:"Your evening anchor: the Seine cruise leaves from the quay by the Musée d'Orsay (Port de Solférino). Plan is cruise first, then dinner after (~9pm). Distances below are measured from here.",
+    addr:"Quai Anatole France / Port de Solférino, 75007",
+    lat:48.859918, lon:2.326585 },
+
+  { name:"Brasserie des Prés", v:"top", emoji:"🥂",
+    tagline:"180 seats, buzzy modern brasserie - best odds of seating 7",
+    blurb:"The Nouvelle Garde team's Saint-Germain brasserie (sister to Dubillot/Bellanger): big, lively, affordable, with a terrace. Its 180 seats are exactly what makes a same-day 7-top realistic, and 9pm is comfortable. Classic French done well - sole meunière, grilled sea bass to share, Salers beef tartare, steamed potatoes.",
+    addr:"6 Cour du Commerce Saint-André, 75006", dist:"~13-15 min walk from the dock",
+    hours:"Dinner from 7:00pm (to 10:30, Thu-Fri 11)", group7:"Easy - biggest room here", price:"€€ (mains €13-50)",
+    timing:"5pm ✗ · 9pm ✓", phone:"01 42 03 44 13", site:"https://lanouvellegarde.com/en/brasserie-des-pres/",
+    gfSafe:"Salers beef tartare (skip the bread), grilled sea bass, farmhouse poultry, steamed potatoes, œufs mimosa/mayo, jambon persillé, foie gras terrine, caviar",
+    gfAvoid:"Pâté en croûte (pastry); sole meunière (fish is floured - ask for it simply grilled)",
+    lat:48.852888, lon:2.339232 },
+
+  { name:"Cinq-Mars", v:"gf", emoji:"🍴",
+    tagline:"Friendliest gluten-free menu - but ~40 seats, tight for 7",
+    blurb:"A warm loft-style bistro doing refined French classics, and just ~2 minutes from the dock. It has the most naturally gluten-free menu of the six across every course, and a small kitchen that can actually tell you how a dish is made. The catch is size: a 7-top is a real squeeze and availability was already thin, so book ahead or call.",
+    addr:"51 Rue de Verneuil, 75007", dist:"~2-3 min walk from the dock (closest)",
+    hours:"Dinner 7:30-10:30pm (Fri to 11)", group7:"Tight (~40 seats) - reserve", price:"€€",
+    timing:"5pm ✗ · 9pm ✓ if available", phone:"01 45 44 69 13", site:"https://www.cinqmarsparis.com/en/",
+    gfSafe:"Œuf mayo, mesclun niçois, poireaux vinaigrette, saumon mariné, palourdes, escargots; omelette, filet de bar grillé, thon aller-retour, filet de bœuf, hachis parmentier, rognons; crème brûlée, mousse au chocolat, cheese, sorbets",
+    gfAvoid:"Toast pleurotes, crottin sur pain grillé, terrine, escalope normande (breaded), cabillaud grenobloise (croutons), crumble, Mont-Blanc, brioche perdue, profiteroles",
+    lat:48.858627, lon:2.326869 },
+
+  { name:"Bouillon Racine", v:"solid", emoji:"🍲",
+    tagline:"Stunning Art Nouveau, cheap and lively - good for a group",
+    blurb:"A gorgeous 1906 Art Nouveau bouillon (a historical monument) doing classic French for great prices - big, buzzy and kid-friendly, so a group of 7 fits well. Plenty of naturally gluten-free mains and desserts; just steer around the crusted/pastry items and ask about the flour-thickened sauces.",
+    addr:"3 Rue Racine, 75006", dist:"~15-18 min walk from the dock",
+    hours:"Dinner from ~7pm (to ~10-11)", group7:"Good - big historic room", price:"€ (cheap)",
+    timing:"5pm ✗ · 9pm ✓", phone:"01 44 32 15 60", site:"https://www.bouillonracine.fr/en/",
+    gfSafe:"Œuf parfait + girolles, carpaccio de Saint-Jacques/bar, escargots; filet de bar, Saint-Jacques snackées, pavé de veau, filet de canette, filet de bœuf (ask about sauces); crème brûlée, île flottante, entremet chocolat, cheese",
+    gfAvoid:"Tarte aux oignons, foie gras + spéculoos, velouté + tempura, sébaste en croûte de coco, pavlova (spéculoos crumble), tarte fine",
+    lat:48.850156, lon:2.342016 },
+
+  { name:"Au Petit Tonneau", v:"solid", emoji:"🍷",
+    tagline:"80-year traditional bistro - 9pm works, needs a short ride",
+    blurb:"An authentic Parisian bistro of 80 years in the western 7th (white-checkered tablecloths, generous home cooking), rated 9.3/10 over 1,300 reviews. It has private-dining options and a terrace, so a group of 7 is doable with notice. It's further west, so a ~10-minute ride from the dock. Moderate gluten-free: the Saint-Pierre with lemon risotto and roast lamb are safe bets.",
+    addr:"20 Rue Surcouf, 75007", dist:"~16 min walk / ~10 min ride from the dock",
+    hours:"Dinner 7:00-10:30pm (Tue-Sun)", group7:"OK with advance notice (private-dining)", price:"€€ (~€52 avg)",
+    timing:"5pm ✗ · 9pm ✓", phone:"01 47 05 09 01", site:"https://www.aupetittonneau.fr/",
+    gfSafe:"Filet de Saint-Pierre + lemon risotto (rice - naturally GF), roast lamb carré + potatoes, grilled meats/fish, salads",
+    gfAvoid:"Blanquette de veau (floured cream sauce), sole meunière (floured)",
+    lat:48.860648, lon:2.309439 },
+
+  { name:"Auguste", v:"splurge", emoji:"⭐",
+    tagline:"1-Michelin-star splurge - safest GF if you call ahead, hard for 7",
+    blurb:"Gaël Orieux's one-star restaurant, right by the hotel on Rue de Bourgogne. Seafood- and vegetable-forward cooking (oysters, scallops, turbot, langoustines, artichokes) that's naturally mostly gluten-free, and a kitchen that will build a bespoke GF progression with a day's notice - the lowest cross-contamination risk of the six. The catch: ~€100pp, only ~30 seats, closed Sat-Sun, and 9pm is the tail end of service. Better as an earlier splurge on a different night than the post-cruise slot for 7.",
+    addr:"54 Rue de Bourgogne, 75007", dist:"~9 min walk from the dock",
+    hours:"Tue-Fri 7:30-10:30pm · closed Sat-Sun", group7:"Hard (~30 seats)", price:"€€€€ (~€100pp; menus €37 lunch / €88 dinner)",
+    timing:"5pm ✗ · 9pm late for them", phone:"01 45 51 61 09", site:"https://guide.michelin.com/en/ile-de-france/paris/restaurant/auguste",
+    gfSafe:"Naturally: oysters, scallops, grilled fish, vegetables - and a bespoke GF menu with advance notice",
+    gfAvoid:"Pastry desserts (soufflé, mille-feuille, crumbles) unless pre-arranged",
+    lat:48.856275, lon:2.317012 },
+
+  { name:"L'Ami Jean", v:"consider", emoji:"🐖",
+    tagline:"21:00 slot showing for 6 - the question is squeezing/splitting to 7",
+    blurb:"Stéphane Jégo's legendary Basque bistronomie - generous, big-flavoured, and one of the best tables in the 7th (the riz au lait is famous and naturally gluten-free). It shows a 9pm reservation for 6, which fits the post-cruise plan. But it's famously cramped (\"c'est serré, oui mais c'est bon\") and strict about tables, so adding a 7th or getting two adjacent tables is a real ask - call and confirm before counting on it. Further west, so a ~10-minute ride.",
+    addr:"27 Rue Malar, 75007", dist:"~20 min walk / ~10 min ride from the dock",
+    hours:"Tue-Sat, dinner from 7pm (last seating ~9pm)", group7:"The open question - 6 fits, 7 needs a call", price:"€€-€€€ (bistronomy)",
+    timing:"5pm ✗ · 9:00pm ✓ for 6", phone:"01 47 05 86 89", site:"https://lamijean.fr/reservation/",
+    gfSafe:"Oysters, grilled/braised meats, and the mythic riz au lait (rice pudding - GF)",
+    gfAvoid:"Terrines lean bready; bread-forward room - flag it",
+    lat:48.860318, lon:2.305992 },
+];
+
+function mapUrl(p){
+  return "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(p.name.replace(/ · .*/,'') + ", " + (p.addr||"Paris") + ", France");
+}
+
+// ---- Map ----
+const map = L.map('map', {scrollWheelZoom:false});
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom:19, attribution:'&copy; OpenStreetMap'
+}).addTo(map);
+
+const bounds = [];
+PLACES.forEach(p => {
+  const icon = L.divIcon({
+    className:'',
+    html:`<div class="leaflet-marker-pin" style="background:${COLORS[p.v]}"><span>${p.emoji}</span></div>`,
+    iconSize:[30,30], iconAnchor:[15,30], popupAnchor:[0,-28]
+  });
+  const m = L.marker([p.lat,p.lon],{icon}).addTo(map);
+  m.bindPopup(`<b>${p.emoji} ${p.name}</b><br>${p.addr||''}<br>`+
+    (p.timing?`${p.timing}<br>`:'')+
+    `<a href="${mapUrl(p)}" target="_blank" rel="noopener">Map</a>`+
+    (p.site?` · <a href="${p.site}" target="_blank" rel="noopener">Info</a>`:''));
+  bounds.push([p.lat,p.lon]);
+});
+map.fitBounds(bounds, {padding:[45,45]});
+
+// ---- Current-location blue dot (geolocation; auto on touch devices) ----
+(function(){
+  let userMarker=null, accCircle=null, watching=false, wantPan=false, panned=false;
+  map.on('locationfound', function(e){
+    const ll=e.latlng, r=e.accuracy||0;
+    if(!userMarker){
+      const dot=L.divIcon({className:'', html:'<div class="user-dot"></div>', iconSize:[18,18], iconAnchor:[9,9]});
+      userMarker=L.marker(ll,{icon:dot, interactive:false, keyboard:false, zIndexOffset:1000}).addTo(map);
+      accCircle=L.circle(ll,{radius:r, color:'#1a73e8', weight:1, fillColor:'#1a73e8', fillOpacity:.12, interactive:false}).addTo(map);
+    } else { userMarker.setLatLng(ll); accCircle.setLatLng(ll).setRadius(r); }
+    if(wantPan && !panned){ panned=true; map.setView(ll, Math.max(map.getZoom(), 14)); }
+  });
+  map.on('locationerror', function(){});
+  function locate(pan){
+    if(pan){ wantPan=true; if(userMarker){ panned=true; map.setView(userMarker.getLatLng(), Math.max(map.getZoom(),14)); } }
+    if(!watching){ watching=true; map.locate({watch:true, enableHighAccuracy:true, maximumAge:10000, timeout:15000}); }
+  }
+  const Locate=L.Control.extend({ options:{position:'topleft'}, onAdd:function(){
+    const b=L.DomUtil.create('a','leaflet-bar leaflet-locate');
+    b.href='#'; b.title='Show my location'; b.setAttribute('role','button'); b.setAttribute('aria-label','Show my location'); b.innerHTML='◎';
+    L.DomEvent.on(b,'click',function(ev){ L.DomEvent.stop(ev); locate(true); });
+    return b;
+  }});
+  map.addControl(new Locate());
+  if(window.matchMedia && window.matchMedia('(pointer: coarse)').matches){ locate(false); }
+})();
+
+// ---- Cards ----
+const host = document.getElementById('cards');
+PLACES.forEach(p => {
+  const el = document.createElement('div');
+  el.className = 'card' + (p.anchor ? ' anchor-card' : '');
+  el.style.borderTopColor = COLORS[p.v];
+  let facts = '';
+  if (!p.anchor){
+    const rows = [
+      ['📍', p.addr], ['🚶', p.dist], ['🕘', p.hours],
+      ['👥', p.group7], ['💶', p.price], ['⏱️', p.timing], ['☎️', p.phone]
+    ];
+    facts = `<ul class="facts">` + rows.filter(r=>r[1]).map(r=>
+      `<li><span class="k">${r[0]}</span><span>${r[1]}</span></li>`).join('') + `</ul>`;
+  } else {
+    facts = `<ul class="facts"><li><span class="k">📍</span><span>${p.addr}</span></li></ul>`;
+  }
+  const gf = (p.gfSafe||p.gfAvoid) ? `<div class="gfbox">`+
+    (p.gfSafe?`<span class="ok">GF-safe:</span> ${p.gfSafe}<br>`:'')+
+    (p.gfAvoid?`<span class="no">Avoid / ask:</span> ${p.gfAvoid}`:'')+`</div>` : '';
+  const bookBtn = p.site ? `<a class="primary" href="${p.site}" target="_blank" rel="noopener">Info / book ↗</a>` : '';
+  const mapBtn = `<a class="ghost" href="${mapUrl(p)}" target="_blank" rel="noopener">Map ↗</a>`;
+  el.innerHTML =
+    `<h3>${p.emoji} ${p.name} <span class="pill" style="background:${COLORS[p.v]}">${VLABEL[p.v]}</span></h3>`+
+    `<div class="tagline">${p.tagline}</div>`+
+    `<div class="blurb">${p.blurb}</div>`+
+    facts + gf +
+    `<div class="links">${bookBtn}${mapBtn}</div>`;
+  host.appendChild(el);
+});
+</script>
+</body>
+</html>
