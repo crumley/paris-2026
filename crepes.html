@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Gluten-free crêpes near the Grand Palais</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<style>
+  :root{
+    --matisse:#2f6fdb; --galette:#1f7a3d; --safe:#2f8f9d; --alt:#c9821a;
+    --ink:#22242a; --muted:#6a6f7a; --bg:#f7f6f2; --card:#fff; --line:#e7e3da;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.5}
+  header{padding:26px 20px 8px;max-width:980px;margin:0 auto}
+  h1{margin:0 0 6px;font-size:1.55rem;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:1rem;margin:0 0 4px}
+  .back{display:inline-block;margin:10px 0 2px;font-size:.85rem;font-weight:600;text-decoration:none;
+    background:#22242a;color:#fff;padding:8px 13px;border-radius:9px}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px 60px}
+  .caveat{font-size:.92rem;color:#5a4a2a;background:#fdf6e7;border:1px solid #f0e3c0;
+    border-left:4px solid var(--alt);border-radius:12px;padding:12px 15px;margin:14px 0 4px}
+  .caveat b{color:#3b2f16}
+  #map{height:440px;width:100%;border-radius:14px;border:1px solid var(--line);margin:14px 0 14px;
+    box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 10px;font-size:.86rem;color:var(--muted)}
+  .legend b{color:var(--ink)}
+  .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-top:10px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+    box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;border-top:4px solid #ccc}
+  .card h3{margin:0;font-size:1.16rem;display:flex;align-items:center;gap:8px;line-height:1.25;flex-wrap:wrap}
+  .pill{font-size:.66rem;font-weight:800;color:#fff;border-radius:999px;padding:3px 9px;white-space:nowrap;letter-spacing:.02em}
+  .tagline{font-weight:600;margin:8px 0 2px;font-size:.97rem}
+  .blurb{color:#3b3f47;font-size:.92rem;margin:6px 0 10px}
+  .facts{list-style:none;margin:2px 0 10px;padding:0;font-size:.87rem;color:#3b3f47}
+  .facts li{margin:3px 0;display:flex;gap:7px}
+  .facts .k{flex:0 0 74px;color:var(--muted);font-weight:600}
+  .gfbox{font-size:.86rem;background:#f4f7f5;border:1px solid #e2ebe6;border-radius:10px;padding:9px 11px;margin:2px 0 10px}
+  .gfbox .ok{color:#1f7a3d;font-weight:700}
+  .gfbox .no{color:#b23b4e;font-weight:700}
+  .links{display:flex;gap:9px;flex-wrap:wrap;margin-top:auto}
+  .links a{font-size:.83rem;font-weight:600;text-decoration:none;padding:7px 11px;border-radius:9px;border:1px solid var(--line)}
+  .links a.primary{background:#22242a;color:#fff;border-color:#22242a}
+  .links a.ghost{background:#fff;color:#22242a}
+  .anchor-card{background:#eef4fb;border-color:#cfe0f2;border-top-color:var(--matisse)}
+  .leaflet-marker-pin{display:flex;align-items:center;justify-content:center;width:30px;height:30px;
+    border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.35);font-size:14px}
+  .leaflet-marker-pin span{transform:rotate(45deg)}
+  .user-dot{width:16px;height:16px;border-radius:50%;background:#1a73e8;border:3px solid #fff;
+    box-shadow:0 0 0 2px rgba(26,115,232,.35),0 1px 4px rgba(0,0,0,.4)}
+  .leaflet-locate{font-size:17px;line-height:26px;text-align:center;color:#1a73e8;font-weight:700;cursor:pointer}
+  .note{font-size:.88rem;color:#3b3f47;margin:24px 0 0;padding:15px 17px;background:#fff;
+    border:1px solid var(--line);border-radius:12px}
+  .note b{color:var(--ink)}
+  footer{max-width:980px;margin:0 auto;padding:0 20px 40px;color:var(--muted);font-size:.82rem}
+</style>
+</head>
+<body>
+<header>
+  <h1>🥞 Gluten-free crêpes near the Grand Palais</h1>
+  <p class="sub">Buckwheat (sarrasin) galettes and safe morning GF bites around the Matisse exhibit. Tap a pin or a card. Blue ◎ button = show my location.</p>
+  <a class="back" href="./">← Back to the schedule</a>
+</header>
+<div class="wrap">
+  <div class="caveat">
+    ⏱️ <b>Morning vs. crêperie:</b> real crêperies (the galette de sarrasin kind) open at <b>lunch, ~noon</b> - so an actual morning buckwheat crêpe isn't a thing here. <b>Buckwheat opens at 12:00.</b> For a bite <i>before</i> the exhibit, go to a <b>dedicated gluten-free bakery</b> (Copains / Wild &amp; The Moon), then save the galette for lunch after.<br><br>
+    🌾 <b>GF note:</b> buckwheat/sarrasin galettes are <i>naturally</i> wheat-free, but a working crêperie also flips wheat-flour sweet crêpes on the same range - so it's "naturally wheat-free," not certified GF. Strict celiac? Stick to the 100% dedicated GF bakeries. At Buckwheat, ask for a clean crêpe maker: <i>"une crêpière propre, sans gluten - je suis cœliaque."</i>
+  </div>
+  <div id="map"></div>
+  <div class="legend">
+    <span><span class="dot" style="background:var(--matisse)"></span><b>Matisse @ Grand Palais</b></span>
+    <span><span class="dot" style="background:var(--galette)"></span><b>Buckwheat galette</b></span>
+    <span><span class="dot" style="background:var(--safe)"></span><b>Dedicated GF · opens AM</b></span>
+    <span><span class="dot" style="background:var(--alt)"></span><b>Also nearby</b></span>
+  </div>
+  <div id="cards" class="grid"></div>
+  <div class="note">
+    <b>Quick read:</b> for a <b>bite before Matisse</b>, <b>Copains (Champs-Élysées)</b> is the pick - 100% gluten-free and open early, ~12-15 min up the avenue. For the <b>real buckwheat galette</b>, <b>Buckwheat</b> by the Louvre is the answer - but it's a <b>post-exhibit lunch</b> (opens noon), one short Métro 1 hop from the Grand Palais. Strict celiac in the group? Keep it to the dedicated GF bakeries.
+  </div>
+</div>
+<footer>
+  Map data © OpenStreetMap contributors. Unlisted working doc for our July trip · not indexed.
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const COLORS = {matisse:'#2f6fdb', galette:'#1f7a3d', safe:'#2f8f9d', alt:'#c9821a'};
+const VLABEL = {matisse:'Matisse @ Grand Palais', galette:'Buckwheat galette', safe:'Dedicated GF · opens AM', alt:'Also nearby'};
+
+const PLACES = [
+  { name:"Grand Palais · Matisse exhibit", v:"matisse", emoji:"🎨", anchor:true,
+    tagline:"Your morning anchor - the crêpe spots radiate out from here",
+    blurb:"The Matisse exhibit at the Grand Palais (8th, on the Champs-Élysées side). Everything below is measured from this entrance. The dedicated GF bakeries sit up the avenue toward the Arc; the real buckwheat crêperie is a short Métro 1 hop east toward the Louvre.",
+    addr:"Grand Palais, Avenue du Général Eisenhower, 75008",
+    lat:48.8661614, lon:2.3122229 },
+
+  { name:"Buckwheat — La Crêperie", v:"galette", emoji:"🥞",
+    tagline:"The real buckwheat galette - opens at noon, not morning",
+    blurb:"A gluten-free-friendly crêperie inside the Hôtel Normandy by the Louvre, and your genuine sarrasin-galette answer: every savory galette is 100% buckwheat (naturally GF), sweet buckwheat crêpes on request. The catch is timing - it opens at 12:00, so treat it as a post-exhibit lunch. It's not a dedicated GF kitchen (wheat-flour sweet crêpes share the range), so anyone strict celiac should ask for a clean crêpe maker.",
+    addr:"7 Rue de l'Échelle, 75001", dist:"~22 min walk, or Métro 1 (~8 min) to Palais Royal–Musée du Louvre",
+    hours:"Daily 12:00-22:00 (lunch onward)", price:"€€ (galettes ~€17)", phone:"01 42 60 30 21",
+    site:"https://www.hotel-normandy.com/en/page/buckwheat-creperie-restaurant-bar-normandy-hotel-paris.766.html",
+    gfSafe:"All savory galettes (100% sarrasin/buckwheat - naturally GF); sweet buckwheat crêpes on request",
+    gfAvoid:"Shared range with wheat-flour sweet crêpes - ask for a clean crêpe maker if strict celiac",
+    lat:48.8640227, lon:2.3342123 },
+
+  { name:"Copains — Champs-Élysées", v:"safe", emoji:"🥐",
+    tagline:"100% gluten-free bakery-café, opens for breakfast - the morning move",
+    blurb:"A fully dedicated gluten-free boulangerie-café: zero cross-contamination, and open in the morning (which the crêperies aren't). The flagship sits ~12-15 min up the Champs-Élysées from the Grand Palais. Buckwheat and other GF flours in the viennoiserie, so you still get that nutty sarrasin note - and travelers this month are obsessed with the almond croissant (\"life changing tbh\"). Breakfast before the exhibit, or a snack after.",
+    addr:"75 Avenue des Champs-Élysées, 75008", dist:"~12-15 min walk up the Champs-Élysées",
+    hours:"Opens for breakfast (~8-9am) - confirm for the day", price:"€-€€",
+    site:"https://www.copains-paris.com/en/",
+    gfSafe:"Everything - it's a 100% gluten-free kitchen (viennoiserie, breads, pastries, buckwheat bakes)",
+    lat:48.8708948, lon:2.3030028 },
+
+  { name:"Wild & The Moon — Champs-Élysées", v:"safe", emoji:"🌱",
+    tagline:"Dedicated GF + plant-based café - safe early backup",
+    blurb:"A fully gluten-free, plant-based café a couple of doors further up the avenue - all homemade, and a solid celiac-safe breakfast, juice or bowl if Copains has a line. Not crêpes, but 100% safe and open in the morning.",
+    addr:"92 Avenue des Champs-Élysées, 75008", dist:"~13-15 min walk up the Champs-Élysées",
+    hours:"Morning onward (café hours) - confirm for the day", price:"€-€€",
+    site:"https://www.wildandthemoon.com/",
+    gfSafe:"Fully gluten-free + plant-based menu (no wheat in the building)",
+    lat:48.8715296, lon:2.3032185 },
+
+  { name:"Copains — Rue Royale", v:"alt", emoji:"🥖",
+    tagline:"Second Copains, toward Concorde / Madeleine",
+    blurb:"The other 8th-arr Copains, ~12 min from the Grand Palais toward the Tuileries/Concorde end - handy if you're heading that direction after the exhibit. Same 100% gluten-free bakery, same safe bet.",
+    addr:"16-18 Rue Royale, 75008", dist:"~12 min walk toward Concorde/Madeleine",
+    hours:"Bakery hours from morning - confirm for the day", price:"€-€€",
+    site:"https://www.copains-paris.com/en/",
+    gfSafe:"100% gluten-free bakery (breads, viennoiserie, pastries)",
+    lat:48.8684273, lon:2.3236138 },
+];
+
+function mapUrl(p){
+  return "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(p.name.replace(/ — .*/,'').replace(/ · .*/,'') + ", " + (p.addr||"Paris") + ", France");
+}
+
+// ---- Map ----
+const map = L.map('map', {scrollWheelZoom:false});
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom:19, attribution:'&copy; OpenStreetMap'
+}).addTo(map);
+
+const bounds = [];
+PLACES.forEach(p => {
+  const icon = L.divIcon({
+    className:'',
+    html:`<div class="leaflet-marker-pin" style="background:${COLORS[p.v]}"><span>${p.emoji}</span></div>`,
+    iconSize:[30,30], iconAnchor:[15,30], popupAnchor:[0,-28]
+  });
+  const m = L.marker([p.lat,p.lon],{icon}).addTo(map);
+  m.bindPopup(`<b>${p.emoji} ${p.name}</b><br>${p.addr||''}<br>`+
+    (p.hours?`${p.hours}<br>`:'')+
+    `<a href="${mapUrl(p)}" target="_blank" rel="noopener">Map</a>`+
+    (p.site?` · <a href="${p.site}" target="_blank" rel="noopener">Info</a>`:''));
+  bounds.push([p.lat,p.lon]);
+});
+map.fitBounds(bounds, {padding:[45,45]});
+
+// ---- Current-location blue dot (geolocation; auto on touch devices) ----
+(function(){
+  let userMarker=null, accCircle=null, watching=false, wantPan=false, panned=false;
+  map.on('locationfound', function(e){
+    const ll=e.latlng, r=e.accuracy||0;
+    if(!userMarker){
+      const dot=L.divIcon({className:'', html:'<div class="user-dot"></div>', iconSize:[18,18], iconAnchor:[9,9]});
+      userMarker=L.marker(ll,{icon:dot, interactive:false, keyboard:false, zIndexOffset:1000}).addTo(map);
+      accCircle=L.circle(ll,{radius:r, color:'#1a73e8', weight:1, fillColor:'#1a73e8', fillOpacity:.12, interactive:false}).addTo(map);
+    } else { userMarker.setLatLng(ll); accCircle.setLatLng(ll).setRadius(r); }
+    if(wantPan && !panned){ panned=true; map.setView(ll, Math.max(map.getZoom(), 14)); }
+  });
+  map.on('locationerror', function(){});
+  function locate(pan){
+    if(pan){ wantPan=true; if(userMarker){ panned=true; map.setView(userMarker.getLatLng(), Math.max(map.getZoom(),14)); } }
+    if(!watching){ watching=true; map.locate({watch:true, enableHighAccuracy:true, maximumAge:10000, timeout:15000}); }
+  }
+  const Locate=L.Control.extend({ options:{position:'topleft'}, onAdd:function(){
+    const b=L.DomUtil.create('a','leaflet-bar leaflet-locate');
+    b.href='#'; b.title='Show my location'; b.setAttribute('role','button'); b.setAttribute('aria-label','Show my location'); b.innerHTML='◎';
+    L.DomEvent.on(b,'click',function(ev){ L.DomEvent.stop(ev); locate(true); });
+    return b;
+  }});
+  map.addControl(new Locate());
+  if(window.matchMedia && window.matchMedia('(pointer: coarse)').matches){ locate(false); }
+})();
+
+// ---- Cards ----
+const host = document.getElementById('cards');
+PLACES.forEach(p => {
+  const el = document.createElement('div');
+  el.className = 'card' + (p.anchor ? ' anchor-card' : '');
+  el.style.borderTopColor = COLORS[p.v];
+  let facts = '';
+  if (!p.anchor){
+    const rows = [
+      ['📍', p.addr], ['🚶', p.dist], ['🕘', p.hours],
+      ['💶', p.price], ['☎️', p.phone]
+    ];
+    facts = `<ul class="facts">` + rows.filter(r=>r[1]).map(r=>
+      `<li><span class="k">${r[0]}</span><span>${r[1]}</span></li>`).join('') + `</ul>`;
+  } else {
+    facts = `<ul class="facts"><li><span class="k">📍</span><span>${p.addr}</span></li></ul>`;
+  }
+  const gf = (p.gfSafe||p.gfAvoid) ? `<div class="gfbox">`+
+    (p.gfSafe?`<span class="ok">GF-safe:</span> ${p.gfSafe}<br>`:'')+
+    (p.gfAvoid?`<span class="no">Ask / note:</span> ${p.gfAvoid}`:'')+`</div>` : '';
+  const bookBtn = p.site ? `<a class="primary" href="${p.site}" target="_blank" rel="noopener">Info ↗</a>` : '';
+  const mapBtn = `<a class="ghost" href="${mapUrl(p)}" target="_blank" rel="noopener">Map ↗</a>`;
+  el.innerHTML =
+    `<h3>${p.emoji} ${p.name} <span class="pill" style="background:${COLORS[p.v]}">${VLABEL[p.v]}</span></h3>`+
+    `<div class="tagline">${p.tagline}</div>`+
+    `<div class="blurb">${p.blurb}</div>`+
+    facts + gf +
+    `<div class="links">${bookBtn}${mapBtn}</div>`;
+  host.appendChild(el);
+});
+</script>
+</body>
+</html>
