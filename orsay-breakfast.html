@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Breakfast near the Musée d'Orsay</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<style>
+  :root{
+    --orsay:#2f6fdb; --door:#1f7a3d; --inside:#8a5cd1; --classic:#d2553b; --coffee:#7a4a2b; --detour:#c9821a;
+    --ink:#22242a; --muted:#6a6f7a; --bg:#f7f6f2; --card:#fff; --line:#e7e3da;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.5}
+  header{padding:26px 20px 8px;max-width:980px;margin:0 auto}
+  h1{margin:0 0 6px;font-size:1.55rem;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:1rem;margin:0 0 4px}
+  .back{display:inline-block;margin:10px 0 2px;font-size:.85rem;font-weight:600;text-decoration:none;
+    background:#22242a;color:#fff;padding:8px 13px;border-radius:9px}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px 60px}
+  .caveat{font-size:.92rem;color:#5a4a2a;background:#fdf6e7;border:1px solid #f0e3c0;
+    border-left:4px solid var(--detour);border-radius:12px;padding:12px 15px;margin:14px 0 4px}
+  .caveat b{color:#3b2f16}
+  #map{height:440px;width:100%;border-radius:14px;border:1px solid var(--line);margin:14px 0 14px;
+    box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin:0 0 10px;font-size:.86rem;color:var(--muted)}
+  .legend b{color:var(--ink)}
+  .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin-top:10px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+    box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column;border-top:4px solid #ccc}
+  .card h3{margin:0;font-size:1.16rem;display:flex;align-items:center;gap:8px;line-height:1.25;flex-wrap:wrap}
+  .pill{font-size:.66rem;font-weight:800;color:#fff;border-radius:999px;padding:3px 9px;white-space:nowrap;letter-spacing:.02em}
+  .tagline{font-weight:600;margin:8px 0 2px;font-size:.97rem}
+  .blurb{color:#3b3f47;font-size:.92rem;margin:6px 0 10px}
+  .facts{list-style:none;margin:2px 0 10px;padding:0;font-size:.87rem;color:#3b3f47}
+  .facts li{margin:3px 0;display:flex;gap:7px}
+  .facts .k{flex:0 0 74px;color:var(--muted);font-weight:600}
+  .gfbox{font-size:.86rem;background:#f4f7f5;border:1px solid #e2ebe6;border-radius:10px;padding:9px 11px;margin:2px 0 10px}
+  .gfbox .ok{color:#1f7a3d;font-weight:700}
+  .gfbox .no{color:#b23b4e;font-weight:700}
+  .links{display:flex;gap:9px;flex-wrap:wrap;margin-top:auto}
+  .links a{font-size:.83rem;font-weight:600;text-decoration:none;padding:7px 11px;border-radius:9px;border:1px solid var(--line)}
+  .links a.primary{background:#22242a;color:#fff;border-color:#22242a}
+  .links a.ghost{background:#fff;color:#22242a}
+  .anchor-card{background:#eef4fb;border-color:#cfe0f2;border-top-color:var(--orsay)}
+  .leaflet-marker-pin{display:flex;align-items:center;justify-content:center;width:30px;height:30px;
+    border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.35);font-size:14px}
+  .leaflet-marker-pin span{transform:rotate(45deg)}
+  .user-dot{width:16px;height:16px;border-radius:50%;background:#1a73e8;border:3px solid #fff;
+    box-shadow:0 0 0 2px rgba(26,115,232,.35),0 1px 4px rgba(0,0,0,.4)}
+  .leaflet-locate{font-size:17px;line-height:26px;text-align:center;color:#1a73e8;font-weight:700;cursor:pointer}
+  .note{font-size:.88rem;color:#3b3f47;margin:24px 0 0;padding:15px 17px;background:#fff;
+    border:1px solid var(--line);border-radius:12px}
+  .note b{color:var(--ink)}
+  footer{max-width:980px;margin:0 auto;padding:0 20px 40px;color:var(--muted);font-size:.82rem}
+</style>
+</head>
+<body>
+<header>
+  <h1>🥐 Breakfast near the Musée d'Orsay</h1>
+  <p class="sub">Thursday morning, all open by 10am - door-side brasseries, a café classic, and specialty coffee within a short walk. Tap a pin or a card. Blue ◎ button = show my location.</p>
+  <a class="back" href="./">← Back to the schedule</a>
+</header>
+<div class="wrap">
+  <div class="caveat">
+    ⏱️ <b>Thursday timing:</b> the Musée d'Orsay opens <b>9:30am</b> (it's closed Mondays) and runs late on Thursday. To eat <i>inside</i> you need a ticket, so the play is a <b>street/door breakfast first, then in</b>. Everything on this map is <b>open by 10am</b> - most from 7-7:30am.<br><br>
+    📍 <b>One unpinned option:</b> <b>Café Blanc</b> sits directly across from the Orsay entrance and is a popular pre-museum breakfast - but I couldn't verify its exact address to place a reliable pin, so treat it as a doorstep walk-up and confirm on the day.
+  </div>
+  <div id="map"></div>
+  <div class="legend">
+    <span><span class="dot" style="background:var(--orsay)"></span><b>Musée d'Orsay</b></span>
+    <span><span class="dot" style="background:var(--door)"></span><b>At the door (2-3 min)</b></span>
+    <span><span class="dot" style="background:var(--inside)"></span><b>Inside the museum</b></span>
+    <span><span class="dot" style="background:var(--classic)"></span><b>Café classic</b></span>
+    <span><span class="dot" style="background:var(--coffee)"></span><b>Specialty coffee</b></span>
+    <span><span class="dot" style="background:var(--detour)"></span><b>Worth the detour</b></span>
+  </div>
+  <div id="cards" class="grid"></div>
+  <div class="note">
+    <b>Quick read:</b> for a <b>proper sit-down right at the door</b>, <b>La Frégate</b> (Seine-side, from 7am). For the <b>occasion breakfast</b>, <b>Les Deux Magots</b> (7:30am, ~10 min into Saint-Germain). For <b>coffee-forward</b>, <b>Cuppa</b> (tiny, right behind the museum) or <b>Coutume</b> (best in the 7th). <b>Carette's</b> viral chocolat chaud is lovely but it's a <b>Trocadéro detour</b>, not an Orsay one - save it for an Eiffel morning.
+  </div>
+</div>
+<footer>
+  Map data © OpenStreetMap contributors. Unlisted working doc for our July trip · not indexed.
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const COLORS = {orsay:'#2f6fdb', door:'#1f7a3d', inside:'#8a5cd1', classic:'#d2553b', coffee:'#7a4a2b', detour:'#c9821a'};
+const VLABEL = {orsay:"Musée d'Orsay", door:"At the door · 2-3 min", inside:"Inside the museum", classic:"Café classic", coffee:"Specialty coffee", detour:"Worth the detour"};
+
+const PLACES = [
+  { name:"Musée d'Orsay · breakfast anchor", v:"orsay", emoji:"🖼️", anchor:true,
+    tagline:"Your Thursday-morning anchor - everything below is a short walk",
+    blurb:"The museum opens 9:30am (Tue-Sun; closed Mondays) and stays open late on Thursday. Every distance below is measured from the entrance on the parvis. Remember: eating at the museum's own cafés means you're already ticketed and inside, so the street and door spots here are your before-you-go-in breakfast.",
+    addr:"1 Rue de la Légion d'Honneur, 75007",
+    lat:48.8599179, lon:2.3265849 },
+
+  { name:"Musée d'Orsay cafés (inside)", v:"inside", emoji:"🍽️",
+    tagline:"Breakfast under 125-year-old frescoes - once you're inside",
+    blurb:"The museum's own dining is a destination in itself: Le Restaurant on the middle level keeps the original 1900 railway-hotel dining room with gilded, frescoed ceilings, and Café Campana sits tucked behind one of the giant station clocks. They open with the museum and run late on Thursday (the ground-floor Café de la Gare is Tue-Sun 9:30am-5:30pm, Thursday to 8pm). You need a museum ticket to reach them, so this is a \"we're already in\" option, not a pre-entry one.",
+    addr:"Inside the museum (ticket required)", dist:"In the museum",
+    hours:"Opens ~9:30am with the museum; Café de la Gare Thu to 8pm", price:"€€",
+    site:"https://www.musee-orsay.fr/en/visit/restaurants-and-cafes",
+    lat:48.86016, lon:2.32690 },
+
+  { name:"La Frégate", v:"door", emoji:"⚓",
+    tagline:"Classic Seine-side brasserie at the door - open from 7am",
+    blurb:"A Napoléon III-style brasserie (wood, leather, marble) on the corner of Quai Voltaire and Rue du Bac, right on the river a 2-3 minute walk from the museum. Open from 7am every day, so it's the reliable full sit-down breakfast before the doors open - coffee, viennoiserie, eggs, the works, with a Seine view.",
+    addr:"31 Quai Voltaire / 1 Rue du Bac, 75007", dist:"~2-3 min walk (Quai Voltaire)",
+    hours:"Daily from 7:00am", price:"€€", phone:"01 42 61 23 77",
+    lat:48.8593126, lon:2.3297242 },
+
+  { name:"Les Deux Magots", v:"classic", emoji:"☕",
+    tagline:"The literary-café breakfast - called a \"spiritual experience\" this week",
+    blurb:"The Saint-Germain institution (Sartre, de Beauvoir, Hemingway) serves its classic breakfast 7:30am-noon daily and stays open to 1am. About a 10-minute walk south into Saint-Germain-des-Prés - a proper occasion breakfast, with the famous thick hot chocolate and viennoiserie. Endorsed just this week on X by @PsychInPractice, who called a morning here \"a spiritual experience.\"",
+    addr:"6 Place Saint-Germain-des-Prés, 75006", dist:"~10 min walk into Saint-Germain",
+    hours:"Breakfast 7:30am-noon (open to 1am), daily", price:"€€€ (you pay for the address)",
+    site:"https://www.lesdeuxmagots.fr/en/",
+    lat:48.8540690, lon:2.3330634 },
+
+  { name:"Cuppa", v:"coffee", emoji:"🥑",
+    tagline:"Tiny couple-run café right behind the Orsay - avo toast + French toast",
+    blurb:"A compact, charming café tucked on a quiet street a 3-minute walk behind the museum. The signature is avocado toast on homemade bread with two hummus and edible flowers (pure Instagram bait), and the French toast gets the reviews. Only a handful of tables inside plus two out front by the windows, so go early.",
+    addr:"86 Rue de l'Université, 75007", dist:"~3 min walk (behind the museum)",
+    hours:"Morning café hours - confirm for the day", price:"€-€€",
+    lat:48.8593746, lon:2.3234969 },
+
+  { name:"Coutume", v:"coffee", emoji:"☕",
+    tagline:"The 7th's best specialty coffee - the roaster that changed Paris",
+    blurb:"The roaster widely credited with kick-starting Paris's specialty-coffee scene, on Rue de Babylone about a 14-minute walk south of the museum. Serious coffee plus a light breakfast/brunch. Opens 8:30am on weekdays (9am weekends), so it's an easy pre-museum stop when great coffee matters more than a big sit-down.",
+    addr:"47 Rue de Babylone, 75007", dist:"~14 min walk south",
+    hours:"Mon-Fri 8:30am-5:30pm · Sat-Sun 9:00am", price:"€-€€",
+    site:"https://www.coutumecafe.com/",
+    lat:48.8516778, lon:2.3183640 },
+
+  { name:"Carette", v:"detour", emoji:"🍫",
+    tagline:"The viral chocolat chaud - but it's a Trocadéro detour",
+    blurb:"The TikTok-famous Parisian tea room (that thick hot chocolate and the pastries - one clip hit 162K views). Gorgeous and worth it, but be honest about geography: it's at Place du Trocadéro across the river by the Eiffel, not near the Orsay - a ~10-minute taxi, not a walk. Save it for a Trocadéro/Eiffel morning instead of an Orsay one. Opens 7am weekdays, 7:30am weekends.",
+    addr:"4 Place du Trocadéro, 75016", dist:"Not near Orsay - ~10 min taxi (Trocadéro)",
+    hours:"Mon-Fri 7:00am · Sat-Sun 7:30am (to 11:30pm)", price:"€€",
+    lat:48.8621770, lon:2.2883918 },
+];
+
+function mapUrl(p){
+  return "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(p.name.replace(/ — .*/,'').replace(/ · .*/,'') + ", " + (p.addr||"Paris") + ", France");
+}
+
+// ---- Map ----
+const map = L.map('map', {scrollWheelZoom:false});
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom:19, attribution:'&copy; OpenStreetMap'
+}).addTo(map);
+
+const bounds = [];
+PLACES.forEach(p => {
+  const icon = L.divIcon({
+    className:'',
+    html:`<div class="leaflet-marker-pin" style="background:${COLORS[p.v]}"><span>${p.emoji}</span></div>`,
+    iconSize:[30,30], iconAnchor:[15,30], popupAnchor:[0,-28]
+  });
+  const m = L.marker([p.lat,p.lon],{icon}).addTo(map);
+  m.bindPopup(`<b>${p.emoji} ${p.name}</b><br>${p.addr||''}<br>`+
+    (p.hours?`${p.hours}<br>`:'')+
+    `<a href="${mapUrl(p)}" target="_blank" rel="noopener">Map</a>`+
+    (p.site?` · <a href="${p.site}" target="_blank" rel="noopener">Info</a>`:''));
+  bounds.push([p.lat,p.lon]);
+});
+map.fitBounds(bounds, {padding:[45,45]});
+
+// ---- Current-location blue dot (geolocation; auto on touch devices) ----
+(function(){
+  let userMarker=null, accCircle=null, watching=false, wantPan=false, panned=false;
+  map.on('locationfound', function(e){
+    const ll=e.latlng, r=e.accuracy||0;
+    if(!userMarker){
+      const dot=L.divIcon({className:'', html:'<div class="user-dot"></div>', iconSize:[18,18], iconAnchor:[9,9]});
+      userMarker=L.marker(ll,{icon:dot, interactive:false, keyboard:false, zIndexOffset:1000}).addTo(map);
+      accCircle=L.circle(ll,{radius:r, color:'#1a73e8', weight:1, fillColor:'#1a73e8', fillOpacity:.12, interactive:false}).addTo(map);
+    } else { userMarker.setLatLng(ll); accCircle.setLatLng(ll).setRadius(r); }
+    if(wantPan && !panned){ panned=true; map.setView(ll, Math.max(map.getZoom(), 14)); }
+  });
+  map.on('locationerror', function(){});
+  function locate(pan){
+    if(pan){ wantPan=true; if(userMarker){ panned=true; map.setView(userMarker.getLatLng(), Math.max(map.getZoom(),14)); } }
+    if(!watching){ watching=true; map.locate({watch:true, enableHighAccuracy:true, maximumAge:10000, timeout:15000}); }
+  }
+  const Locate=L.Control.extend({ options:{position:'topleft'}, onAdd:function(){
+    const b=L.DomUtil.create('a','leaflet-bar leaflet-locate');
+    b.href='#'; b.title='Show my location'; b.setAttribute('role','button'); b.setAttribute('aria-label','Show my location'); b.innerHTML='◎';
+    L.DomEvent.on(b,'click',function(ev){ L.DomEvent.stop(ev); locate(true); });
+    return b;
+  }});
+  map.addControl(new Locate());
+  if(window.matchMedia && window.matchMedia('(pointer: coarse)').matches){ locate(false); }
+})();
+
+// ---- Cards ----
+const host = document.getElementById('cards');
+PLACES.forEach(p => {
+  const el = document.createElement('div');
+  el.className = 'card' + (p.anchor ? ' anchor-card' : '');
+  el.style.borderTopColor = COLORS[p.v];
+  let facts = '';
+  if (!p.anchor){
+    const rows = [
+      ['📍', p.addr], ['🚶', p.dist], ['🕘', p.hours],
+      ['💶', p.price], ['☎️', p.phone]
+    ];
+    facts = `<ul class="facts">` + rows.filter(r=>r[1]).map(r=>
+      `<li><span class="k">${r[0]}</span><span>${r[1]}</span></li>`).join('') + `</ul>`;
+  } else {
+    facts = `<ul class="facts"><li><span class="k">📍</span><span>${p.addr}</span></li></ul>`;
+  }
+  const gf = (p.gfSafe||p.gfAvoid) ? `<div class="gfbox">`+
+    (p.gfSafe?`<span class="ok">GF-safe:</span> ${p.gfSafe}<br>`:'')+
+    (p.gfAvoid?`<span class="no">Ask / note:</span> ${p.gfAvoid}`:'')+`</div>` : '';
+  const bookBtn = p.site ? `<a class="primary" href="${p.site}" target="_blank" rel="noopener">Info ↗</a>` : '';
+  const mapBtn = `<a class="ghost" href="${mapUrl(p)}" target="_blank" rel="noopener">Map ↗</a>`;
+  el.innerHTML =
+    `<h3>${p.emoji} ${p.name} <span class="pill" style="background:${COLORS[p.v]}">${VLABEL[p.v]}</span></h3>`+
+    `<div class="tagline">${p.tagline}</div>`+
+    `<div class="blurb">${p.blurb}</div>`+
+    facts + gf +
+    `<div class="links">${bookBtn}${mapBtn}</div>`;
+  host.appendChild(el);
+});
+</script>
+</body>
+</html>
