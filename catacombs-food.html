@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Catacombs · Before &amp; After Food &amp; Drinks</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<style>
+  :root{
+    --before:#d2553b; --snack:#b5740f; --after:#8a5cd1; --cata:#22242a; --gf:#2e9e5b;
+    --ink:#22242a; --muted:#6a6f7a; --bg:#f7f6f2; --card:#fff; --line:#e7e3da;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.5}
+  header{padding:26px 20px 8px;max-width:980px;margin:0 auto}
+  h1{margin:0 0 6px;font-size:1.6rem;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:1rem;margin:0 0 4px}
+  .back{display:inline-block;margin:10px 0 2px;font-size:.85rem;font-weight:600;text-decoration:none;
+    background:#22242a;color:#fff;padding:8px 13px;border-radius:9px}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px 60px}
+  .caveat{font-size:.9rem;color:#33291a;background:#faf3e6;border:1px solid #efe0c2;
+    border-left:4px solid var(--snack);border-radius:12px;padding:12px 15px;margin:14px 0 4px}
+  #map{height:440px;width:100%;border-radius:14px;border:1px solid var(--line);margin:14px 0 14px;
+    box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin:0 0 10px;font-size:.9rem;color:var(--muted)}
+  .legend b{color:var(--ink)}
+  .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .secthead{display:flex;align-items:center;gap:9px;margin:30px 0 4px;font-size:1.28rem;font-weight:700}
+  .secthead .bar{width:11px;height:11px;border-radius:50%}
+  .sectsub{color:var(--muted);font-size:.9rem;margin:0 0 14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+    box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column}
+  .card h3{margin:0;font-size:1.16rem;display:flex;align-items:center;gap:8px;line-height:1.25;flex-wrap:wrap}
+  .pill{font-size:.66rem;font-weight:700;color:#fff;border-radius:999px;padding:2px 9px;white-space:nowrap}
+  .pill.before{background:var(--before)} .pill.snack{background:var(--snack)} .pill.after{background:var(--after)}
+  .pill.gffull{background:var(--gf)}
+  .tagline{font-weight:600;margin:8px 0 2px;font-size:.97rem}
+  .blurb{color:#3b3f47;font-size:.92rem;margin:6px 0 10px;flex:1}
+  .blurb a{color:var(--after);font-weight:600}
+  .meta{font-size:.83rem;color:var(--muted);margin-bottom:10px}
+  .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto}
+  .links a{font-size:.84rem;font-weight:600;text-decoration:none;padding:7px 12px;border-radius:9px;border:1px solid var(--line)}
+  .links a.primary{background:#22242a;color:#fff;border-color:#22242a}
+  .links a.ghost{background:#fff;color:#22242a}
+  .leaflet-marker-pin{display:flex;align-items:center;justify-content:center;width:30px;height:30px;
+    border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.35);font-size:14px}
+  .leaflet-marker-pin span{transform:rotate(45deg)}
+  .note{font-size:.88rem;color:#3b3f47;margin:26px 0 0;padding:15px 17px;background:#fff;
+    border:1px solid var(--line);border-radius:12px}
+  .note b{color:var(--ink)}
+  footer{max-width:980px;margin:0 auto;padding:0 20px 40px;color:var(--muted);font-size:.82rem}
+</style>
+</head>
+<body>
+<header>
+  <h1>💀 Catacombs · Before &amp; After Food &amp; Drinks</h1>
+  <p class="sub">Where to eat and drink around our Catacombs visit (Wed Jul 22, 2:00pm) in the 14th. Tap a pin or a card for more.</p>
+  <a class="back" href="./">← Back to the schedule</a>
+</header>
+<div class="wrap">
+  <div class="caveat">
+    🎟️ <b>The setup:</b> you enter at <b>Place Denfert-Rochereau</b> for the 2pm slot and surface ~45–60 min later at the exit, <b>21bis Ave René Coty</b>, about a 5-minute walk south. So the <b>before</b> spots cluster around the entrance and the rue Daguerre market street; the <b>after</b> spots are by the exit. Gluten-free: <b>Slow</b> is the best bet, with <b>Indiana Café</b> at the entrance, and <b>Kapunka</b> (all-GF Thai) plus <b>La Guinguette d'Angèle</b> a few minutes further toward Montparnasse.
+  </div>
+  <div id="map"></div>
+  <div class="legend">
+    <span><span class="dot" style="background:var(--before)"></span><b>Before</b> · lunch</span>
+    <span><span class="dot" style="background:var(--snack)"></span><b>Snack</b> · coffee &amp; grab-and-go</span>
+    <span><span class="dot" style="background:var(--after)"></span><b>After</b> · drinks</span>
+    <span><span class="dot" style="background:var(--cata)"></span><b>Catacombs</b> · entrance &amp; exit</span>
+  </div>
+  <div id="sections"></div>
+  <div class="note">
+    <b>Quick plan:</b> reserve <b>Slow</b> (gluten-free) or grab a table at <b>I Grappoli</b> (pizza) for ~12:30 so you're done before the 2pm slot; after the tour, <b>Fourteen Café</b> is basically at the exit for a coffee or a glass. Everything here is open on a Wednesday.
+  </div>
+</div>
+<footer>
+  Map data © OpenStreetMap contributors. Unlisted working doc for our July trip · not indexed.
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const COLORS = {before:'#d2553b', snack:'#b5740f', after:'#8a5cd1', cata:'#22242a'};
+
+const PLACES = [
+  // ---- CATACOMBS LANDMARKS ----
+  { name:"Catacombs — entrance", cat:"cata", emoji:"💀", mapOnly:true,
+    tagline:"Your 2pm slot", addr:"Place Denfert-Rochereau (1 Ave du Colonel Rol-Tanguy)",
+    lat:48.833744, lon:2.332292 },
+  { name:"Catacombs — exit", cat:"cata", emoji:"🚪", mapOnly:true,
+    tagline:"Where you come out", addr:"21bis Ave René Coty · ~5 min south of the entrance",
+    lat:48.829526, lon:2.334533 },
+
+  // ---- BEFORE · LUNCH ----
+  { name:"I Grappoli", cat:"before", emoji:"🍕",
+    tagline:"Italian trattoria on the entrance square",
+    blurb:"An Italian trattoria right on Place Denfert-Rochereau, a minute from the entrance, doing wood-fired pizzas on natural-yeast dough, handmade gnocchi and fresh pasta. There's a glass-roofed terrace that opens up in good weather, and it's open all day - an easy, kid-pleasing lunch before your slot.",
+    addr:"22 Place Denfert-Rochereau", walk:"~1 min from the entrance", hours:"Daily 12:00–24:00",
+    site:"https://www.igrappoli.fr/en/", lat:48.833921, lon:2.330907 },
+  { name:"Slow", cat:"before", emoji:"🥗", gf:"full",
+    tagline:"Low-impact fusion — the gluten-free pick",
+    blurb:"A small fusion restaurant on the corner of rue Daguerre with, in its own words, the maximum number of vegan, vegetarian and gluten-free options, on a seasonal menu that changes monthly. The most reliable gluten-free lunch near the Catacombs - but only 24 seats, so book ahead.",
+    addr:"4 Rue Danville (corner rue Daguerre)", walk:"~6 min · west end of rue Daguerre", hours:"Lunch Tue–Fri 12:00–15:00 · closed Mon · reserve",
+    site:"https://www.slowfamily.fr/en/", lat:48.834399, lon:2.327613 },
+  { name:"Indiana Café", cat:"before", emoji:"🌮", gf:"full",
+    tagline:"Casual Tex-Mex with a gluten-free menu",
+    blurb:"A Tex-Mex brasserie on Place Denfert-Rochereau, right by the entrance, that keeps a dedicated gluten-free menu - fajitas, grills, salads. Not haute cuisine, but a dependable, casual, allergy-aware option a minute from the door when you want something safe and quick before heading down.",
+    addr:"Place Denfert-Rochereau", walk:"~1 min from the entrance", hours:"Daily · GF menu",
+    lat:48.833453, lon:2.332029 },
+
+  // ---- SNACK · COFFEE ----
+  { name:"Café Fernand", cat:"snack", emoji:"☕",
+    tagline:"Warm neighbourhood café on rue Daguerre",
+    blurb:"A warm neighbourhood café at 25 rue Daguerre - coffee, a glass of wine or a light bite - good for a relaxed sit-down on the market street before the tour. Part of the rue Daguerre café row a few minutes from the entrance.",
+    addr:"25 Rue Daguerre", walk:"~4 min · rue Daguerre", hours:"Café hours",
+    lat:48.834151, lon:2.328919 },
+  { name:"Rue Daguerre market", cat:"snack", emoji:"🧺",
+    tagline:"Pedestrian market street — grab-and-go",
+    blurb:"The pedestrian market street itself, lined with cheesemongers, bakeries, greengrocers and traiteurs. The move for a quick snack - a pastry, a slice, some fruit - to eat on the walk to the entrance. Liveliest in the morning and midday.",
+    addr:"Rue Daguerre, 75014", walk:"~3 min · on the way in", hours:"Mornings–midday (liveliest)",
+    lat:48.833684, lon:2.330340 },
+
+  // ---- AFTER · DRINKS ----
+  { name:"Fourteen Café", cat:"after", emoji:"🍸",
+    tagline:"Café-bar basically at the exit",
+    blurb:"A trendy café-bar at 14 Ave René Coty, essentially at the Catacombs exit - reviewers call it the close-to-the-exit, not-too-touristy place to decompress afterwards. Great coffee, long drinks and wine, and outdoor seating. Open till 11pm, so it works whether you surface at 4pm for a coffee or later for a glass.",
+    addr:"14 Avenue René Coty", walk:"~1 min from the exit", hours:"Mon–Sat ~11:00–23:00",
+    site:"https://fourteencafe.eatbu.com/?lang=en", lat:48.830398, lon:2.333639 },
+  { name:"Café du Rendez-Vous", cat:"after", emoji:"🍷",
+    tagline:"Grand corner brasserie — apéro & tapas",
+    blurb:"A big corner brasserie on Place Denfert-Rochereau, run by the same family for 30+ years, open 7 days from morning to 1am with a 5–11pm happy hour and tapas. Right by the Denfert metro, so it works for a pre-tour coffee or a post-tour apéro on the way back to the RER.",
+    addr:"2 Avenue du Général Leclerc", walk:"at the Denfert metro (entrance side)", hours:"Daily 7:00–01:00 · HH 17:00–23:00",
+    site:"https://lecafedurendezvous.com/", lat:48.833571, lon:2.331549 },
+  { name:"Le Flash", cat:"after", emoji:"🍺",
+    tagline:"Cosy low-key neighbourhood bar",
+    blurb:"A cosy, low-key bar at 47 rue Boulard, a short walk west - the spot for a proper drink with friends in a warm, unfussy setting once you're back above ground.",
+    addr:"47 Rue Boulard", walk:"~6 min · rue Boulard", hours:"Bar hours",
+    lat:48.832139, lon:2.327622 },
+];
+
+function mapUrl(p){
+  return "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(p.name.replace(/ — .*/,'') + ", " + (p.addr||"Paris 14") + ", France");
+}
+
+// ---- Map ----
+const map = L.map('map', {scrollWheelZoom:false});
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom:19, attribution:'&copy; OpenStreetMap'
+}).addTo(map);
+
+const bounds = [];
+PLACES.forEach(p => {
+  if (p.noMap) return;
+  const icon = L.divIcon({
+    className:'',
+    html:`<div class="leaflet-marker-pin" style="background:${COLORS[p.cat]}"><span>${p.emoji}</span></div>`,
+    iconSize:[30,30], iconAnchor:[15,30], popupAnchor:[0,-28]
+  });
+  const m = L.marker([p.lat,p.lon],{icon}).addTo(map);
+  const siteLink = p.site ? `<a href="${p.site}" target="_blank" rel="noopener">More info</a> · ` : '';
+  m.bindPopup(
+    `<b>${p.emoji} ${p.name}</b><br>${p.addr||''}<br>`+
+    (p.hours?`<i>${p.hours}</i><br>`:'')+
+    siteLink + `<a href="${mapUrl(p)}" target="_blank" rel="noopener">Map</a>`
+  );
+  bounds.push([p.lat,p.lon]);
+});
+map.fitBounds(bounds, {padding:[50,50]});
+
+// ---- Sections ----
+const SECTIONS = [
+  { cat:"before", title:"🍽️ Before · lunch by the entrance", sub:"Near the entrance and along rue Daguerre - aim to finish by ~1:30 for the 2pm slot." },
+  { cat:"snack",  title:"☕ Snack &amp; coffee on rue Daguerre", sub:"Grab-and-go or a quick coffee on the market street before you head down." },
+  { cat:"after",  title:"🍸 After · drinks by the exit", sub:"You surface at Ave René Coty - these are the closest spots to decompress." },
+];
+
+const GFLABEL = { full:'🌾 GLUTEN-FREE' };
+
+const host = document.getElementById('sections');
+SECTIONS.forEach(sec => {
+  const head = document.createElement('div');
+  head.className = 'secthead';
+  head.innerHTML = `<span class="bar" style="background:${COLORS[sec.cat]}"></span>${sec.title}`;
+  host.appendChild(head);
+  const sub = document.createElement('p');
+  sub.className = 'sectsub';
+  sub.innerHTML = sec.sub;
+  host.appendChild(sub);
+
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  PLACES.filter(p => p.cat === sec.cat && !p.mapOnly).forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'card';
+    const mapBtn = `<a class="${p.site?'ghost':'primary'}" href="${mapUrl(p)}" target="_blank" rel="noopener">Map &amp; directions ↗</a>`;
+    const siteBtn = p.site ? `<a class="primary" href="${p.site}" target="_blank" rel="noopener">More info ↗</a>` : '';
+    const gfPill = p.gf ? ` <span class="pill gffull">${GFLABEL[p.gf]}</span>` : '';
+    const label = sec.title.replace(/^\S+\s/,'').replace(/ ·.*/,'');
+    el.innerHTML =
+      `<h3>${p.emoji} ${p.name} <span class="pill ${p.cat}">${label}</span>${gfPill}</h3>`+
+      `<div class="tagline">${p.tagline}</div>`+
+      `<div class="blurb">${p.blurb}</div>`+
+      `<div class="meta">📍 ${p.addr} · 🚶 ${p.walk}${p.hours?` · 🕐 ${p.hours}`:''}</div>`+
+      `<div class="links">${siteBtn}${mapBtn}</div>`;
+    grid.appendChild(el);
+  });
+  host.appendChild(grid);
+});
+</script>
+</body>
+</html>
