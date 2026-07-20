@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Paris · Dinner — Local Favorites</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<style>
+  :root{
+    --east:#c05a3c; --village:#2f8f7d; --base:#6a6f7a;
+    --ink:#22242a; --muted:#6a6f7a; --bg:#f7f6f2; --card:#fff; --line:#e7e3da;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.5}
+  header{padding:26px 20px 8px;max-width:980px;margin:0 auto}
+  h1{margin:0 0 6px;font-size:1.6rem;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:1rem;margin:0 0 4px}
+  .back{display:inline-block;margin:10px 0 2px;font-size:.85rem;font-weight:600;text-decoration:none;
+    background:#22242a;color:#fff;padding:8px 13px;border-radius:9px}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px 60px}
+  .caveat{font-size:.9rem;color:#3a2c1a;background:#fbf1e9;border:1px solid #ecd4c2;
+    border-left:4px solid var(--east);border-radius:12px;padding:12px 15px;margin:14px 0 4px}
+  #map{height:460px;width:100%;border-radius:14px;border:1px solid var(--line);margin:14px 0 14px;
+    box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin:0 0 10px;font-size:.9rem;color:var(--muted)}
+  .legend b{color:var(--ink)}
+  .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .secthead{display:flex;align-items:center;gap:9px;margin:30px 0 4px;font-size:1.28rem;font-weight:700}
+  .secthead .bar{width:11px;height:11px;border-radius:50%}
+  .sectsub{color:var(--muted);font-size:.9rem;margin:0 0 14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+    box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column}
+  .card h3{margin:0;font-size:1.16rem;display:flex;align-items:center;gap:8px;line-height:1.25;flex-wrap:wrap}
+  .pill{font-size:.63rem;font-weight:700;color:#fff;border-radius:999px;padding:2px 9px;white-space:nowrap;letter-spacing:.02em}
+  .pill.east{background:var(--east)} .pill.village{background:var(--village)}
+  .tagline{font-weight:600;margin:8px 0 2px;font-size:.97rem}
+  .blurb{color:#3b3f47;font-size:.92rem;margin:6px 0 10px;flex:1}
+  .blurb a{color:var(--east);font-weight:600}
+  .meta{font-size:.83rem;color:var(--muted);margin-bottom:10px}
+  .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto}
+  .links a{font-size:.84rem;font-weight:600;text-decoration:none;padding:7px 12px;border-radius:9px;border:1px solid var(--line)}
+  .links a.primary{background:#22242a;color:#fff;border-color:#22242a}
+  .links a.ghost{background:#fff;color:#22242a}
+  .leaflet-marker-pin{display:flex;align-items:center;justify-content:center;width:30px;height:30px;
+    border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.35);font-size:14px}
+  .leaflet-marker-pin span{transform:rotate(45deg)}
+  .note{font-size:.88rem;color:#3b3f47;margin:26px 0 0;padding:15px 17px;background:#fff;
+    border:1px solid var(--line);border-radius:12px}
+  .note b{color:var(--ink)}
+  footer{max-width:980px;margin:0 auto;padding:0 20px 40px;color:var(--muted);font-size:.82rem}
+</style>
+</head>
+<body>
+<header>
+  <h1>🥘 Paris · Dinner — Local Favorites</h1>
+  <p class="sub">The beloved neighborhood institutions Parisians actually pack out - chosen for an outdoor table, real buzz, and the kind of atmosphere you only get where locals eat. All out east of the hotel, in the village-y quarters where the good terraces are: Bastille, the Aligre market, Butte aux Cailles, the Canal and the Marais. Tap a pin or a card for more.</p>
+  <a class="back" href="./">← Back to the schedule</a>
+</header>
+<div class="wrap">
+  <div class="caveat">
+    🗺️ <b>Why they're all east:</b> the 1st (around the hotel) is grand but not a neighborhood-dinner district - the real local-favorite terraces are a 12-25 min métro ride east. That's the trade for atmosphere. Every spot here is a genuine local institution with outdoor seating; most are casual and affordable. A few worth knowing: <b>Chez Prune</b> and <b>La Fontaine de Belleville</b> are canal/Belleville hangouts, <b>Chez Gladines</b> and <b>Le Temps des Cerises</b> sit on the village-like Butte aux Cailles, and the <b>Aligre</b> cluster (Le Baron Rouge, Square Trousseau) is best paired with a morning at the market.
+  </div>
+  <div id="map"></div>
+  <div class="legend">
+    <span><span class="dot" style="background:var(--east)"></span><b>Bastille · Aligre · Charonne (11th/12th)</b></span>
+    <span><span class="dot" style="background:var(--village)"></span><b>Butte aux Cailles · Canal · Marais</b></span>
+    <span><span class="dot" style="background:var(--base)"></span><b>Our hotel</b></span>
+  </div>
+  <div id="sections"></div>
+  <div class="note">
+    <b>If you only pick one:</b> for pure local buzz, <b>Le Baron Rouge</b> by the Aligre market (wine from the barrel, crowd on the pavement). For a proper sit-down with a leafy terrace, <b>Le Square Trousseau</b>. For the village-on-a-hill evening, <b>Chez Gladines</b> on Butte aux Cailles. And for a canal-side table watching the boats, <b>Chez Prune</b>. Weekend evenings the terraces fill fast - go early or book where you can.
+  </div>
+</div>
+<footer>
+  Map data © OpenStreetMap contributors. Unlisted working doc for our July trip · not indexed.
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const COLORS = {east:'#c05a3c', village:'#2f8f7d', base:'#6a6f7a'};
+
+const PLACES = [
+  // ---- BASE ----
+  { name:"Grand Hôtel du Palais Royal", cat:"base", emoji:"🏨", mapOnly:true,
+    tagline:"Our base for Jul 21–23", addr:"4 Rue de Valois, 75001 — opening onto the Palais Royal gardens",
+    lat:48.863113, lon:2.337775 },
+
+  // ---- BASTILLE · ALIGRE · CHARONNE (11th/12th) ----
+  { name:"Le Baron Rouge", cat:"east", emoji:"🍷", hood:"ALIGRE",
+    tagline:"Wine from the barrel, the crowd on the pavement",
+    blurb:"The definitive local-atmosphere spot: a cult wine bar by the Marché d'Aligre where regulars fill their bottles straight from the barrels, slurp oysters and platters of charcuterie, and spill out onto the street with a glass in hand. Hectic, joyful, thoroughly Parisian - no reservations, just wade in. Best paired with a Sunday morning at the market next door. Not a sit-down dinner so much as a great standing-up one.",
+    addr:"1 Rue Théophile Roussel, 75012", walk:"🚇 ~20 min · métro to Ledru-Rollin", hours:"Daily · closed Mon · no reservations",
+    lat:48.849440, lon:2.377442 },
+  { name:"Le Square Trousseau", cat:"east", emoji:"🌿", hood:"ALIGRE",
+    tagline:"Leafy 1907 terrace on a quiet square",
+    blurb:"A gorgeous Belle-Époque bistro - moldings, mirrors, zinc bar, unchanged since 1907 - on a calm square a block from the Aligre market, with a big leafy terrace and non-stop service. Generous, unpretentious French cooking (steak tartare, roast chicken, a proper crème caramel) and a devoted local following. The pick when you want a real sit-down terrace dinner in the neighborhood.",
+    addr:"1 Rue Antoine Vollon, 75012", walk:"🚇 ~20 min · métro to Ledru-Rollin", hours:"Daily · continuous service · reserve",
+    site:"https://squaretrousseau.com/en/", lat:48.850257, lon:2.376567 },
+  { name:"Café de l'Industrie", cat:"east", emoji:"🍽️", hood:"BASTILLE",
+    tagline:"Big, buzzy neighborhood institution near Bastille",
+    blurb:"A sprawling, beloved Bastille bistro that's been packed for decades - warm colonial-chic rooms, walls of old photos, and a lively pavement terrace. Honest French plates at fair prices, an easy crowd of locals, and the kind of hum that makes an ordinary Tuesday feel like an event. No fuss, great value, real atmosphere.",
+    addr:"16 Rue Saint-Sabin, 75011", walk:"🚇 ~15 min · métro to Bréguet-Sabin", hours:"Daily · continuous · reserve for groups",
+    lat:48.855658, lon:2.371823 },
+  { name:"À la Biche au Bois", cat:"east", emoji:"🦌", hood:"GARE DE LYON",
+    tagline:"Old-school game bistro, green terrace, huge value",
+    blurb:"A cherished old-guard institution near Gare de Lyon, famous for game in season (the namesake venison), coq au vin, a groaning cheese board and generous prix-fixe menus. A leafy glassed-in terrace out front, gruff-warm career waiters, and lines of regulars. The definition of a local favorite that has quietly kept doing it right for decades.",
+    addr:"45 Avenue Ledru-Rollin, 75012", walk:"🚇 ~15 min · métro to Gare de Lyon", hours:"Dinner · closed Sat–Sun · reserve",
+    lat:48.847968, lon:2.371075 },
+  { name:"Le Bistrot Paul Bert", cat:"east", emoji:"🥩", hood:"CHARONNE",
+    tagline:"The neighborhood-bistro benchmark, sidewalk terrace",
+    blurb:"On a quiet Charonne street, the bistro every Paris list eventually names - chalkboard classics done right (steak-frites, a towering Paris-Brest, tarte Tatin), a joy of a grower wine list, honest prices, and a room full of regulars. A classic pavement terrace for warm evenings. If you want one perfect, un-touristy local bistro night, this is it. Book ahead.",
+    addr:"18 Rue Paul Bert, 75011", walk:"🚇 ~20 min · métro to Faidherbe-Chaligny", hours:"Dinner · closed Sun–Mon · reserve",
+    lat:48.852229, lon:2.384868 },
+
+  // ---- BUTTE AUX CAILLES · CANAL · MARAIS ----
+  { name:"Chez Gladines", cat:"village", emoji:"🌶️", hood:"BUTTE AUX CAILLES",
+    tagline:"Rowdy Basque institution on the village hill",
+    blurb:"A Butte aux Cailles legend: heaped Basque-Béarnaise plates (the giant salads in cast-iron pans, piperade, duck), cheap Irouléguy by the pitcher, and a rowdy, elbow-to-elbow crowd that spills onto the terrace of this village-like, tourist-free hill. No reservations, often a wait, always a good time. The most fun-per-euro local dinner on the list.",
+    addr:"30 Rue des Cinq Diamants, 75013", walk:"🚇 ~25 min · métro to Corvisart", hours:"Daily · no reservations",
+    lat:48.828787, lon:2.350641 },
+  { name:"Le Temps des Cerises", cat:"village", emoji:"🍒", hood:"BUTTE AUX CAILLES",
+    tagline:"Historic co-op bistro, warm and thoroughly local",
+    blurb:"A worker-cooperative bistro that has anchored the Butte aux Cailles for generations - convivial, a little bohemian, with honest traditional French cooking, fair prices and a terrace on the prettiest stretch of the village. Full of neighborhood regulars and history (the name nods to the Commune). Pair it with a wander of the low, ivy-hung streets around it.",
+    addr:"18–20 Rue de la Butte aux Cailles, 75013", walk:"🚇 ~25 min · métro to Corvisart", hours:"Lunch & dinner · reserve",
+    lat:48.827902, lon:2.350781 },
+  { name:"Chez Prune", cat:"village", emoji:"🌊", hood:"CANAL ST-MARTIN",
+    tagline:"The canal-side hangout, terrace over the water",
+    blurb:"The quintessential Canal Saint-Martin café-bistro and its unofficial living room: a big terrace right on the water, a bobo-local crowd, and prime people-watching as the world drifts by along the canal. Simple, good bistro plates and cheese/charcuterie boards, better for the scene and the golden-hour apéro than for fine dining. Peak casual-local atmosphere.",
+    addr:"36 Rue Beaurepaire, 75010", walk:"🚇 ~20 min · métro to Jacques Bonsergent", hours:"Daily · continuous · no reservations",
+    lat:48.871574, lon:2.364485 },
+  { name:"La Fontaine de Belleville", cat:"village", emoji:"🎷", hood:"BELLEVILLE",
+    tagline:"Corner café-bistro with great coffee and weekend jazz",
+    blurb:"A restored 1900s corner café run by the Belleville Brûlerie coffee crew - excellent coffee and natural-ish apéro wines, a short menu of good bistro plates and croques, a sunny terrace on a quiet Belleville junction, and live jazz on weekends. Deeply local and unhurried; the spot for a long, easy evening that feels like real Paris, not a postcard of it.",
+    addr:"31–33 Rue Juliette Dodu, 75010", walk:"🚇 ~20 min · métro to Colonel Fabien", hours:"Daily · continuous · weekend jazz",
+    lat:48.875884, lon:2.368356 },
+  { name:"Chez Janou", cat:"village", emoji:"🌿", hood:"MARAIS",
+    tagline:"Bustling Provençal terrace by the Place des Vosges",
+    blurb:"A buzzing Provençal bistro on a Marais corner near the Place des Vosges, with a lively sidewalk terrace that's pure Paris people-watching. Generous southern cooking - ratatouille, daube, a legendary help-yourself chocolate mousse - a Rhône-and-Provence wine list and a wall of pastis. Loud and fun rather than hushed, and the most central of the local favorites here. Book the terrace ahead.",
+    addr:"2 Rue Roger Verlomme, 75003", walk:"🚇 ~12 min · métro to Chemin Vert", hours:"Lunch & dinner daily · reserve",
+    site:"https://www.chezjanou.com/", lat:48.856707, lon:2.367214 },
+];
+
+function mapUrl(p){
+  return "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(p.name.replace(/ · .*/,'') + ", " + (p.addr||"Paris") + ", France");
+}
+
+// ---- Map ----
+const map = L.map('map', {scrollWheelZoom:false});
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom:19, attribution:'&copy; OpenStreetMap'
+}).addTo(map);
+
+const bounds = [];
+PLACES.forEach(p => {
+  if (p.noMap) return;
+  const icon = L.divIcon({
+    className:'',
+    html:`<div class="leaflet-marker-pin" style="background:${COLORS[p.cat]}"><span>${p.emoji}</span></div>`,
+    iconSize:[30,30], iconAnchor:[15,30], popupAnchor:[0,-28]
+  });
+  const m = L.marker([p.lat,p.lon],{icon}).addTo(map);
+  const siteLink = p.site ? `<a href="${p.site}" target="_blank" rel="noopener">More info</a> · ` : '';
+  m.bindPopup(
+    `<b>${p.emoji} ${p.name}</b><br>${p.addr||''}<br>`+
+    (p.hours?`<i>${p.hours}</i><br>`:'')+
+    siteLink + `<a href="${mapUrl(p)}" target="_blank" rel="noopener">Map</a>`
+  );
+  bounds.push([p.lat,p.lon]);
+});
+map.fitBounds(bounds, {padding:[50,50]});
+
+// ---- Sections ----
+const SECTIONS = [
+  { cat:"east", title:"🍷 Bastille · Aligre · Charonne", sub:"The east-Paris bistro belt (11th & 12th) — market wine bars and career bistros where the neighborhood eats." },
+  { cat:"village", title:"🌊 Butte aux Cailles · Canal · Marais", sub:"Village-y quarters with the best local terraces — a hill, a canal, and one buzzing Marais corner." },
+];
+
+const host = document.getElementById('sections');
+SECTIONS.forEach(sec => {
+  const head = document.createElement('div');
+  head.className = 'secthead';
+  head.innerHTML = `<span class="bar" style="background:${COLORS[sec.cat]}"></span>${sec.title}`;
+  host.appendChild(head);
+  const sub = document.createElement('p');
+  sub.className = 'sectsub';
+  sub.textContent = sec.sub;
+  host.appendChild(sub);
+
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  PLACES.filter(p => p.cat === sec.cat && !p.mapOnly).forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'card';
+    const mapBtn = `<a class="${p.site?'ghost':'primary'}" href="${mapUrl(p)}" target="_blank" rel="noopener">Map &amp; directions ↗</a>`;
+    const siteBtn = p.site ? `<a class="primary" href="${p.site}" target="_blank" rel="noopener">More info ↗</a>` : '';
+    const hoodPill = p.hood ? ` <span class="pill ${p.cat}">${p.hood}</span>` : '';
+    el.innerHTML =
+      `<h3>${p.emoji} ${p.name}${hoodPill}</h3>`+
+      `<div class="tagline">${p.tagline}</div>`+
+      `<div class="blurb">${p.blurb}</div>`+
+      `<div class="meta">📍 ${p.addr} · ${p.walk}${p.hours?` · 🕐 ${p.hours}`:''}</div>`+
+      `<div class="links">${siteBtn}${mapBtn}</div>`;
+    grid.appendChild(el);
+  });
+  host.appendChild(grid);
+});
+</script>
+</body>
+</html>
