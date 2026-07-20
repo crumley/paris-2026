@@ -58,12 +58,12 @@
 <body>
 <header>
   <h1>🍷 Paris · Dinner — Food, Wine &amp; a Terrace</h1>
-  <p class="sub">Dinner spots chosen for atmosphere and people-watching, an outdoor table where possible, and genuinely great food with a serious wine list. No tourist landmarks — these are the chef- and wine-led places Parisians actually book. Bonus points for a short hop from the Palais Royal hotel. Tap a pin or a card for more.</p>
+  <p class="sub">Dinner spots chosen for atmosphere and people-watching, an outdoor table where possible, and genuinely great food with a proper <b>classic French</b> wine list — real cellars and sommellerie, not the natural-wine scene. No tourist landmarks; these are the chef- and cellar-led places Parisians actually book. Bonus points for a short hop from the Palais Royal hotel. Tap a pin or a card for more.</p>
   <a class="back" href="./">← Back to the schedule</a>
 </header>
 <div class="wrap">
   <div class="caveat">
-    🍇 <b>How this is sorted:</b> the first group is walkable from <b>4 Rue de Valois</b> (the hotel). The second group is a short métro ride into the <b>11th</b> and the Marais — Paris's real food-and-wine quarter, livelier and more local than the center. A green <b>🌿 TERRACE</b> tag marks the ones with proper outdoor seating (you said you'd prefer to be outside). Most of the wine-led spots take reservations well ahead; <b>Clamato</b> is walk-in only.
+    🍇 <b>How this is sorted:</b> the first group is walkable from <b>4 Rue de Valois</b> (the hotel) — classic rooms in the 1st &amp; 2nd. The second group is a short métro ride into the <b>11th, the 6th and the Marais</b>, where the great bistros and the serious classic French cellars are — livelier and more local than the center. A green <b>🌿 TERRACE</b> tag marks the ones with proper outdoor seating (you said you'd rather be outside). Everything here takes reservations — book the terrace tables and the small classics well ahead.
   </div>
   <div id="map"></div>
   <div class="legend">
@@ -74,7 +74,7 @@
   </div>
   <div id="sections"></div>
   <div class="note">
-    <b>If you only pick one:</b> for outside + atmosphere + serious food near the hotel, <b>Restaurant du Palais Royal</b> (garden terrace) is the splurge and <b>Willis</b> the easy wine-bar move. For the full lively-Paris evening, the <b>11th</b> is worth the métro — <b>Clown Bar</b> for the room and the natural wine, <b>Bistrot Paul Bert</b> for the classic bistro-with-a-terrace night, <b>Clamato</b> if you'd rather walk in than book. And <b>Grand Cœur</b> is the prettiest hidden courtyard terrace of the lot.
+    <b>If you only pick one:</b> for outside + atmosphere + serious food near the hotel, <b>Restaurant du Palais Royal</b> (garden terrace) is the splurge and <b>Willis</b> the easy wine-bar move. For the definitive classic-bistro night, <b>La Poule au Pot</b> near the hotel or <b>Bistrot Paul Bert</b> in the 11th. For the wine list itself, <b>Vantre</b>'s cellar or <b>Josephine Chez Dumonet</b>'s great Bordeaux &amp; Burgundy by the half-bottle. And <b>Grand Cœur</b> is the prettiest hidden-courtyard terrace of the lot.
   </div>
 </div>
 <footer>
@@ -95,49 +95,49 @@ const PLACES = [
   // ---- NEAR THE HOTEL & CENTRAL ----
   { name:"Restaurant du Palais Royal", cat:"near", emoji:"⭐", terr:true,
     tagline:"Two-star cooking with a terrace in the Palais Royal garden",
-    blurb:"Philip Chronopoulos's two-Michelin-star kitchen tucked under the arcades of the Palais Royal, with a coveted summer terrace looking straight onto the garden - about the loveliest outdoor dinner setting in central Paris. Precise, seafood-leaning gastronomy and a deep cellar. This is the splurge, and the near-hotel pick when you want great food <b>and</b> to be outside; book the terrace well ahead.",
+    blurb:"Philip Chronopoulos's two-Michelin-star kitchen tucked under the arcades of the Palais Royal, with a coveted summer terrace looking straight onto the garden - about the loveliest outdoor dinner setting in central Paris. Precise, seafood-leaning gastronomy and a deep, classic French cellar. This is the splurge, and the near-hotel pick when you want great food <b>and</b> to be outside; book the terrace well ahead.",
     addr:"110 Galerie de Valois, 75001", walk:"🚶 ~2 min from the hotel", hours:"Dinner · closed Sun–Mon · reserve early",
     site:"https://restaurantdupalaisroyal.com/en/", lat:48.865755, lon:2.338937 },
-  { name:"Willis Wine Bar", cat:"near", emoji:"🍷",
+  { name:"La Poule au Pot", cat:"near", emoji:"🍲",
+    tagline:"Jean-François Piège's Michelin-starred ode to old Paris",
+    blurb:"A love letter to timeless French cooking near Les Halles - vol-au-vent, the namesake poached-chicken <b>poule au pot</b>, a Grand Marnier soufflé - done at a Michelin-star level in a warm, red-velvet 1930s room. A properly classic, sommelier-guided French wine list to match. Cozy and romantic rather than outdoors; the near-hotel pick when you want the timeless version done beautifully. Reserve.",
+    addr:"9 Rue Vauvilliers, 75001", walk:"🚶 ~7 min from the hotel", hours:"Dinner nightly · reserve",
+    site:"https://www.lapouleaupot.com/en/", lat:48.861678, lon:2.343256 },
+  { name:"Chez Georges", cat:"near", emoji:"🍷",
+    tagline:"The insider's old-school bistro behind the Bourse",
+    blurb:"A quintessential unchanged bistro on a quiet street off the Place des Victoires, beloved by an old-Paris crowd of publishers and bankers rather than tour groups. Textbook classics - frisée aux lardons, sole meunière, steak au poivre, profiteroles - and a classic French list the gruff-but-warm room will steer you through. Indoor charm, no terrace; the real-deal bistro night near the hotel. Reserve.",
+    addr:"1 Rue du Mail, 75002", walk:"🚶 ~7 min from the hotel", hours:"Dinner · closed Sat–Sun · reserve",
+    lat:48.866395, lon:2.341406 },
+  { name:"Willis Wine Bar", cat:"near", emoji:"🍇",
     tagline:"The original Paris wine bar, minutes away",
-    blurb:"Mark Williamson's pioneering wine bar off the Place des Victoires, running since 1980 and still one of the best rooms in the 1st for independent French growers by the glass. A short, seasonal bistro menu built to drink well - the low-key, food-and-wine move a few minutes from the door. A snug room with a couple of pavement tables rather than a full terrace.",
+    blurb:"Mark Williamson's pioneering wine bar off the Place des Victoires, running since 1980 and still one of the best <b>classic French</b> lists in the 1st - strong on the Rhône and serious growers, well beyond the natural-wine crowd. A short, seasonal bistro menu built to show the bottles off. A snug room with a couple of pavement tables rather than a full terrace; the low-key food-and-wine move a few minutes from the door.",
     addr:"13 Rue des Petits-Champs, 75001", walk:"🚶 ~4 min from the hotel", hours:"Lunch &amp; dinner · closed Sun",
     site:"https://www.williswinebar.com/", lat:48.866345, lon:2.338290 },
-  { name:"Verjus Bar à Vins", cat:"near", emoji:"🥂",
-    tagline:"Walk-in wine bar under an acclaimed table",
-    blurb:"The cellar wine bar beneath Verjus, hidden in the Palais Royal backstreets - no reservation, just walk in for a glass from a smart natural-leaning list and a run of excellent small plates (the fried chicken is a fixture). Warm, buzzy, and genuinely a locals-and-in-the-know spot rather than a tourist stop. An indoor room, so save it for the night the weather turns.",
-    addr:"47 Rue de Montpensier, 75001", walk:"🚶 ~2 min from the hotel", hours:"Dinner · walk-in · closed Sun",
-    site:"https://verjusparis.com/pages/bar-a-vins", lat:48.866391, lon:2.337529 },
-  { name:"Racines", cat:"near", emoji:"🍇", terr:true,
-    tagline:"Natural wine under the glass roof of a 19th-c. passage",
-    blurb:"A natural-wine bistro with tables set out in the glass-roofed Passage des Panoramas - covered, but with all the strollers-going-by ambience of an old Parisian arcade. Italian-leaning seasonal cooking and one of the passage's serious wine lists; the whole passage is a food-and-wine crowd rather than a tour-group one. Great for that people-watching-without-the-crowds evening.",
-    addr:"8 Passage des Panoramas, 75002", walk:"🚶 ~13 min · or a couple of métro stops", hours:"Lunch &amp; dinner · closed Sun",
-    lat:48.871249, lon:2.341767 },
 
   // ---- FOOD & WINE · SHORT MÉTRO ----
-  { name:"Clown Bar", cat:"wine", emoji:"🍷",
-    tagline:"Belle-Époque tiled room, standout natural wine",
-    blurb:"A Bib Gourmand natural-wine bistro beside the old Cirque d'Hiver, set in a landmarked 1900s room of painted tiles and a zinc bar - one of the prettiest interiors in Paris to drink well in. Inventive, produce-driven plates and a list that wine people cross town for. Lively and local; a few pavement tables but the magic is the room, so this is the indoor-atmosphere pick.",
-    addr:"114 Rue Amelot, 75011", walk:"🚇 ~15 min · métro to Filles du Calvaire", hours:"Dinner · reserve ahead",
-    site:"https://www.clown-bar-paris.com/", lat:48.863587, lon:2.367132 },
   { name:"Le Bistrot Paul Bert", cat:"wine", emoji:"🥩", terr:true,
     tagline:"The definitive Paris bistro — and a sidewalk terrace",
-    blurb:"Bertrand Auboyneau's benchmark bistro on a quiet 11th street: chalkboard classics done properly - steak-frites, a towering Paris-Brest, tarte Tatin - and a grower-heavy wine list that's a genuine joy to drink from. A classic pavement terrace for warm evenings and a room full of regulars. If you want one perfect, un-touristy Parisian bistro night with wine, this is it. Book ahead.",
+    blurb:"Bertrand Auboyneau's benchmark bistro on a quiet 11th street: chalkboard classics done properly - steak-frites, a towering Paris-Brest, tarte Tatin - and a broad, grower-and-classic French list that's a genuine joy to drink from. A classic pavement terrace for warm evenings and a room full of regulars. If you want one perfect, un-touristy Parisian bistro night with real wine, this is it. Book ahead.",
     addr:"18 Rue Paul Bert, 75011", walk:"🚇 ~20 min · métro to Faidherbe-Chaligny", hours:"Dinner · closed Sun–Mon · reserve",
     lat:48.852229, lon:2.384868 },
-  { name:"Clamato", cat:"wine", emoji:"🦪", terr:true,
-    tagline:"Septime's walk-in seafood &amp; natural wine",
-    blurb:"The no-reservation seafood annexe of Septime - oysters, small seasonal plates from the day's catch, and a cracking natural-wine list, all walk-in. Easygoing, buzzy and thoroughly of-the-neighborhood; you put your name down and have a glass while you wait. A handful of terrace tables on Rue de Charonne. The pick for a great-food-and-wine night with zero reservation stress.",
-    addr:"80 Rue de Charonne, 75011", walk:"🚇 ~20 min · métro to Charonne", hours:"Dinner nightly · walk-in only",
-    site:"https://www.clamato-charonne.fr/", lat:48.853603, lon:2.380956 },
   { name:"Vantre", cat:"wine", emoji:"🍾", terr:true,
-    tagline:"One of the deepest wine lists in Paris",
-    blurb:"A bistronomy address whose cellar runs to a legendary thousands-of-references list - sommelier heaven - paired with confident, generous cooking. Warm service, a devoted following, and a sidewalk terrace on Rue de la Fontaine au Roi. Come here when the <b>wine</b> is the point and the food is more than able to keep up. Reserve.",
+    tagline:"One of the deepest classic cellars in Paris",
+    blurb:"A bistronomy address whose cellar is the reason to come: one of the deepest lists in the city, thousands of references running deep into <b>Burgundy, Bordeaux, Champagne</b> and older vintages - sommelier heaven - paired with confident, generous cooking. Warm service, a devoted following, and a sidewalk terrace on Rue de la Fontaine au Roi. Come here when the wine is the point and the food more than keeps up. Reserve.",
     addr:"19 Rue de la Fontaine au Roi, 75011", walk:"🚇 ~18 min · métro to Goncourt", hours:"Dinner · closed Sat–Sun · reserve",
     site:"https://www.vantre.fr/", lat:48.868505, lon:2.370174 },
+  { name:"Josephine Chez Dumonet", cat:"wine", emoji:"🥘",
+    tagline:"A fabled cellar and the bistro of your imagination",
+    blurb:"A family-run classic near the Cherche-Midi that is the French bistro you always pictured - boeuf bourguignon, duck confit, a famous Grand Marnier soufflé, gruff-warm service. The cellar is the secret weapon: a deep, old-school French list generous with <b>half-bottles</b>, so you can drink great Bordeaux and Burgundy right across the meal. A few tables on the corner outside. Reserve.",
+    addr:"117 Rue du Cherche-Midi, 75006", walk:"🚇 ~20 min · métro to Duroc / Vaneau", hours:"Dinner · closed Sat–Sun · reserve",
+    lat:48.845840, lon:2.319816 },
+  { name:"Le Bon Saint Pourçain", cat:"wine", emoji:"🌿", terr:true,
+    tagline:"A hidden terrace behind Saint-Sulpice",
+    blurb:"Tucked on a silent street behind the Saint-Sulpice church, with a coveted little terrace and a following of in-the-know locals. Classic-modern French bistro cooking - leeks vinaigrette, roast chicken, île flottante - and a tight, well-chosen French list. One of the loveliest hidden-terrace dinners in the 6th, and firmly not a tourist address. Reserve ahead for an outside table.",
+    addr:"10bis Rue Servandoni, 75006", walk:"🚇 ~15 min · métro to Saint-Sulpice / Mabillon", hours:"Dinner · reserve for the terrace",
+    lat:48.849901, lon:2.334747 },
   { name:"Grand Cœur", cat:"wine", emoji:"🌸", terr:true,
     tagline:"A gourmet terrace hidden in a Marais courtyard",
-    blurb:"Refined, Mediterranean-leaning seasonal cooking on a big candlelit terrace set inside a cobbled, heritage-listed Marais courtyard - screened off the street, so it feels like a secret. The prettiest proper outdoor dinner of the list, with a smart wine list to match. Romantic and local-feeling despite the central address; book a courtyard table.",
+    blurb:"Refined, Mediterranean-leaning seasonal cooking on a big candlelit terrace set inside a cobbled, heritage-listed Marais courtyard - screened off the street, so it feels like a secret. The prettiest proper outdoor dinner of the list, with a smart French wine list to match. Romantic and local-feeling despite the central address; book a courtyard table.",
     addr:"41 Rue du Temple, 75004", walk:"🚇 ~12 min · métro to Rambuteau", hours:"Dinner · reserve a terrace table",
     site:"https://www.grandcoeur.paris/", lat:48.859569, lon:2.353997 },
 ];
@@ -174,8 +174,8 @@ map.fitBounds(bounds, {padding:[50,50]});
 
 // ---- Sections ----
 const SECTIONS = [
-  { cat:"near", title:"🏛️ Near the hotel & central", sub:"Walkable from 4 Rue de Valois — food-and-wine rooms in the 1st & 2nd, plus a garden-terrace splurge." },
-  { cat:"wine", title:"🍇 Food & wine · a short métro away", sub:"The 11th and the Marais — livelier, more local, and where the best bistros and natural-wine tables are. Worth the ride." },
+  { cat:"near", title:"🏛️ Near the hotel & central", sub:"Walkable from 4 Rue de Valois — classic French rooms and good wine in the 1st & 2nd, plus a garden-terrace splurge." },
+  { cat:"wine", title:"🍷 Great food & wine · a short métro away", sub:"The 11th, the 6th and the Marais — proper bistros and serious classic French cellars, livelier and more local than the center. Worth the ride." },
 ];
 
 const host = document.getElementById('sections');
