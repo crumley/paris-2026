@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Paris · Dinner — Food, Wine &amp; a Terrace</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<style>
+  :root{
+    --near:#b8863b; --wine:#8a3b52; --terr:#2e8b57; --base:#6a6f7a;
+    --ink:#22242a; --muted:#6a6f7a; --bg:#f7f6f2; --card:#fff; --line:#e7e3da;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.5}
+  header{padding:26px 20px 8px;max-width:980px;margin:0 auto}
+  h1{margin:0 0 6px;font-size:1.6rem;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:1rem;margin:0 0 4px}
+  .back{display:inline-block;margin:10px 0 2px;font-size:.85rem;font-weight:600;text-decoration:none;
+    background:#22242a;color:#fff;padding:8px 13px;border-radius:9px}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px 60px}
+  .caveat{font-size:.9rem;color:#4a2c1a;background:#fbf3e9;border:1px solid #ecd9c2;
+    border-left:4px solid var(--near);border-radius:12px;padding:12px 15px;margin:14px 0 4px}
+  #map{height:440px;width:100%;border-radius:14px;border:1px solid var(--line);margin:14px 0 14px;
+    box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin:0 0 10px;font-size:.9rem;color:var(--muted)}
+  .legend b{color:var(--ink)}
+  .dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .secthead{display:flex;align-items:center;gap:9px;margin:30px 0 4px;font-size:1.28rem;font-weight:700}
+  .secthead .bar{width:11px;height:11px;border-radius:50%}
+  .sectsub{color:var(--muted);font-size:.9rem;margin:0 0 14px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
+    box-shadow:0 1px 3px rgba(0,0,0,.05);display:flex;flex-direction:column}
+  .card h3{margin:0;font-size:1.16rem;display:flex;align-items:center;gap:8px;line-height:1.25;flex-wrap:wrap}
+  .pill{font-size:.66rem;font-weight:700;color:#fff;border-radius:999px;padding:2px 9px;white-space:nowrap}
+  .pill.near{background:var(--near)} .pill.wine{background:var(--wine)}
+  .pill.terr{background:#fff;color:var(--terr);border:1px solid var(--terr)}
+  .tagline{font-weight:600;margin:8px 0 2px;font-size:.97rem}
+  .blurb{color:#3b3f47;font-size:.92rem;margin:6px 0 10px;flex:1}
+  .blurb a{color:var(--wine);font-weight:600}
+  .meta{font-size:.83rem;color:var(--muted);margin-bottom:10px}
+  .links{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto}
+  .links a{font-size:.84rem;font-weight:600;text-decoration:none;padding:7px 12px;border-radius:9px;border:1px solid var(--line)}
+  .links a.primary{background:#22242a;color:#fff;border-color:#22242a}
+  .links a.ghost{background:#fff;color:#22242a}
+  .leaflet-marker-pin{display:flex;align-items:center;justify-content:center;width:30px;height:30px;
+    border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.35);font-size:14px}
+  .leaflet-marker-pin span{transform:rotate(45deg)}
+  .note{font-size:.88rem;color:#3b3f47;margin:26px 0 0;padding:15px 17px;background:#fff;
+    border:1px solid var(--line);border-radius:12px}
+  .note b{color:var(--ink)}
+  footer{max-width:980px;margin:0 auto;padding:0 20px 40px;color:var(--muted);font-size:.82rem}
+</style>
+</head>
+<body>
+<header>
+  <h1>🍷 Paris · Dinner — Food, Wine &amp; a Terrace</h1>
+  <p class="sub">Dinner spots chosen for atmosphere and people-watching, an outdoor table where possible, and genuinely great food with a serious wine list. No tourist landmarks — these are the chef- and wine-led places Parisians actually book. Bonus points for a short hop from the Palais Royal hotel. Tap a pin or a card for more.</p>
+  <a class="back" href="./">← Back to the schedule</a>
+</header>
+<div class="wrap">
+  <div class="caveat">
+    🍇 <b>How this is sorted:</b> the first group is walkable from <b>4 Rue de Valois</b> (the hotel). The second group is a short métro ride into the <b>11th</b> and the Marais — Paris's real food-and-wine quarter, livelier and more local than the center. A green <b>🌿 TERRACE</b> tag marks the ones with proper outdoor seating (you said you'd prefer to be outside). Most of the wine-led spots take reservations well ahead; <b>Clamato</b> is walk-in only.
+  </div>
+  <div id="map"></div>
+  <div class="legend">
+    <span><span class="dot" style="background:var(--near)"></span><b>Near the hotel &amp; central</b></span>
+    <span><span class="dot" style="background:var(--wine)"></span><b>Food &amp; wine · short métro</b></span>
+    <span><span class="dot" style="background:var(--terr)"></span><b>🌿 Real outdoor terrace</b></span>
+    <span><span class="dot" style="background:var(--base)"></span><b>Our hotel</b></span>
+  </div>
+  <div id="sections"></div>
+  <div class="note">
+    <b>If you only pick one:</b> for outside + atmosphere + serious food near the hotel, <b>Restaurant du Palais Royal</b> (garden terrace) is the splurge and <b>Willis</b> the easy wine-bar move. For the full lively-Paris evening, the <b>11th</b> is worth the métro — <b>Clown Bar</b> for the room and the natural wine, <b>Bistrot Paul Bert</b> for the classic bistro-with-a-terrace night, <b>Clamato</b> if you'd rather walk in than book. And <b>Grand Cœur</b> is the prettiest hidden courtyard terrace of the lot.
+  </div>
+</div>
+<footer>
+  Map data © OpenStreetMap contributors. Unlisted working doc for our July trip · not indexed.
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const COLORS = {near:'#b8863b', wine:'#8a3b52', base:'#6a6f7a'};
+
+const PLACES = [
+  // ---- BASE ----
+  { name:"Grand Hôtel du Palais Royal", cat:"base", emoji:"🏨", mapOnly:true,
+    tagline:"Our base for Jul 21–23", addr:"4 Rue de Valois, 75001 — opening onto the Palais Royal gardens",
+    lat:48.863113, lon:2.337775 },
+
+  // ---- NEAR THE HOTEL & CENTRAL ----
+  { name:"Restaurant du Palais Royal", cat:"near", emoji:"⭐", terr:true,
+    tagline:"Two-star cooking with a terrace in the Palais Royal garden",
+    blurb:"Philip Chronopoulos's two-Michelin-star kitchen tucked under the arcades of the Palais Royal, with a coveted summer terrace looking straight onto the garden - about the loveliest outdoor dinner setting in central Paris. Precise, seafood-leaning gastronomy and a deep cellar. This is the splurge, and the near-hotel pick when you want great food <b>and</b> to be outside; book the terrace well ahead.",
+    addr:"110 Galerie de Valois, 75001", walk:"🚶 ~2 min from the hotel", hours:"Dinner · closed Sun–Mon · reserve early",
+    site:"https://restaurantdupalaisroyal.com/en/", lat:48.865755, lon:2.338937 },
+  { name:"Willis Wine Bar", cat:"near", emoji:"🍷",
+    tagline:"The original Paris wine bar, minutes away",
+    blurb:"Mark Williamson's pioneering wine bar off the Place des Victoires, running since 1980 and still one of the best rooms in the 1st for independent French growers by the glass. A short, seasonal bistro menu built to drink well - the low-key, food-and-wine move a few minutes from the door. A snug room with a couple of pavement tables rather than a full terrace.",
+    addr:"13 Rue des Petits-Champs, 75001", walk:"🚶 ~4 min from the hotel", hours:"Lunch &amp; dinner · closed Sun",
+    site:"https://www.williswinebar.com/", lat:48.866345, lon:2.338290 },
+  { name:"Verjus Bar à Vins", cat:"near", emoji:"🥂",
+    tagline:"Walk-in wine bar under an acclaimed table",
+    blurb:"The cellar wine bar beneath Verjus, hidden in the Palais Royal backstreets - no reservation, just walk in for a glass from a smart natural-leaning list and a run of excellent small plates (the fried chicken is a fixture). Warm, buzzy, and genuinely a locals-and-in-the-know spot rather than a tourist stop. An indoor room, so save it for the night the weather turns.",
+    addr:"47 Rue de Montpensier, 75001", walk:"🚶 ~2 min from the hotel", hours:"Dinner · walk-in · closed Sun",
+    site:"https://verjusparis.com/pages/bar-a-vins", lat:48.866391, lon:2.337529 },
+  { name:"Racines", cat:"near", emoji:"🍇", terr:true,
+    tagline:"Natural wine under the glass roof of a 19th-c. passage",
+    blurb:"A natural-wine bistro with tables set out in the glass-roofed Passage des Panoramas - covered, but with all the strollers-going-by ambience of an old Parisian arcade. Italian-leaning seasonal cooking and one of the passage's serious wine lists; the whole passage is a food-and-wine crowd rather than a tour-group one. Great for that people-watching-without-the-crowds evening.",
+    addr:"8 Passage des Panoramas, 75002", walk:"🚶 ~13 min · or a couple of métro stops", hours:"Lunch &amp; dinner · closed Sun",
+    lat:48.871249, lon:2.341767 },
+
+  // ---- FOOD & WINE · SHORT MÉTRO ----
+  { name:"Clown Bar", cat:"wine", emoji:"🍷",
+    tagline:"Belle-Époque tiled room, standout natural wine",
+    blurb:"A Bib Gourmand natural-wine bistro beside the old Cirque d'Hiver, set in a landmarked 1900s room of painted tiles and a zinc bar - one of the prettiest interiors in Paris to drink well in. Inventive, produce-driven plates and a list that wine people cross town for. Lively and local; a few pavement tables but the magic is the room, so this is the indoor-atmosphere pick.",
+    addr:"114 Rue Amelot, 75011", walk:"🚇 ~15 min · métro to Filles du Calvaire", hours:"Dinner · reserve ahead",
+    site:"https://www.clown-bar-paris.com/", lat:48.863587, lon:2.367132 },
+  { name:"Le Bistrot Paul Bert", cat:"wine", emoji:"🥩", terr:true,
+    tagline:"The definitive Paris bistro — and a sidewalk terrace",
+    blurb:"Bertrand Auboyneau's benchmark bistro on a quiet 11th street: chalkboard classics done properly - steak-frites, a towering Paris-Brest, tarte Tatin - and a grower-heavy wine list that's a genuine joy to drink from. A classic pavement terrace for warm evenings and a room full of regulars. If you want one perfect, un-touristy Parisian bistro night with wine, this is it. Book ahead.",
+    addr:"18 Rue Paul Bert, 75011", walk:"🚇 ~20 min · métro to Faidherbe-Chaligny", hours:"Dinner · closed Sun–Mon · reserve",
+    lat:48.852229, lon:2.384868 },
+  { name:"Clamato", cat:"wine", emoji:"🦪", terr:true,
+    tagline:"Septime's walk-in seafood &amp; natural wine",
+    blurb:"The no-reservation seafood annexe of Septime - oysters, small seasonal plates from the day's catch, and a cracking natural-wine list, all walk-in. Easygoing, buzzy and thoroughly of-the-neighborhood; you put your name down and have a glass while you wait. A handful of terrace tables on Rue de Charonne. The pick for a great-food-and-wine night with zero reservation stress.",
+    addr:"80 Rue de Charonne, 75011", walk:"🚇 ~20 min · métro to Charonne", hours:"Dinner nightly · walk-in only",
+    site:"https://www.clamato-charonne.fr/", lat:48.853603, lon:2.380956 },
+  { name:"Vantre", cat:"wine", emoji:"🍾", terr:true,
+    tagline:"One of the deepest wine lists in Paris",
+    blurb:"A bistronomy address whose cellar runs to a legendary thousands-of-references list - sommelier heaven - paired with confident, generous cooking. Warm service, a devoted following, and a sidewalk terrace on Rue de la Fontaine au Roi. Come here when the <b>wine</b> is the point and the food is more than able to keep up. Reserve.",
+    addr:"19 Rue de la Fontaine au Roi, 75011", walk:"🚇 ~18 min · métro to Goncourt", hours:"Dinner · closed Sat–Sun · reserve",
+    site:"https://www.vantre.fr/", lat:48.868505, lon:2.370174 },
+  { name:"Grand Cœur", cat:"wine", emoji:"🌸", terr:true,
+    tagline:"A gourmet terrace hidden in a Marais courtyard",
+    blurb:"Refined, Mediterranean-leaning seasonal cooking on a big candlelit terrace set inside a cobbled, heritage-listed Marais courtyard - screened off the street, so it feels like a secret. The prettiest proper outdoor dinner of the list, with a smart wine list to match. Romantic and local-feeling despite the central address; book a courtyard table.",
+    addr:"41 Rue du Temple, 75004", walk:"🚇 ~12 min · métro to Rambuteau", hours:"Dinner · reserve a terrace table",
+    site:"https://www.grandcoeur.paris/", lat:48.859569, lon:2.353997 },
+];
+
+function mapUrl(p){
+  return "https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(p.name.replace(/ · .*/,'') + ", " + (p.addr||"Paris") + ", France");
+}
+
+// ---- Map ----
+const map = L.map('map', {scrollWheelZoom:false});
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom:19, attribution:'&copy; OpenStreetMap'
+}).addTo(map);
+
+const bounds = [];
+PLACES.forEach(p => {
+  if (p.noMap) return;
+  const icon = L.divIcon({
+    className:'',
+    html:`<div class="leaflet-marker-pin" style="background:${COLORS[p.cat]}"><span>${p.emoji}</span></div>`,
+    iconSize:[30,30], iconAnchor:[15,30], popupAnchor:[0,-28]
+  });
+  const m = L.marker([p.lat,p.lon],{icon}).addTo(map);
+  const siteLink = p.site ? `<a href="${p.site}" target="_blank" rel="noopener">More info</a> · ` : '';
+  m.bindPopup(
+    `<b>${p.emoji} ${p.name}</b><br>${p.addr||''}<br>`+
+    (p.hours?`<i>${p.hours}</i><br>`:'')+
+    siteLink + `<a href="${mapUrl(p)}" target="_blank" rel="noopener">Map</a>`
+  );
+  bounds.push([p.lat,p.lon]);
+});
+map.fitBounds(bounds, {padding:[50,50]});
+
+// ---- Sections ----
+const SECTIONS = [
+  { cat:"near", title:"🏛️ Near the hotel & central", sub:"Walkable from 4 Rue de Valois — food-and-wine rooms in the 1st & 2nd, plus a garden-terrace splurge." },
+  { cat:"wine", title:"🍇 Food & wine · a short métro away", sub:"The 11th and the Marais — livelier, more local, and where the best bistros and natural-wine tables are. Worth the ride." },
+];
+
+const host = document.getElementById('sections');
+SECTIONS.forEach(sec => {
+  const head = document.createElement('div');
+  head.className = 'secthead';
+  head.innerHTML = `<span class="bar" style="background:${COLORS[sec.cat]}"></span>${sec.title}`;
+  host.appendChild(head);
+  const sub = document.createElement('p');
+  sub.className = 'sectsub';
+  sub.textContent = sec.sub;
+  host.appendChild(sub);
+
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  PLACES.filter(p => p.cat === sec.cat && !p.mapOnly).forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'card';
+    const mapBtn = `<a class="${p.site?'ghost':'primary'}" href="${mapUrl(p)}" target="_blank" rel="noopener">Map &amp; directions ↗</a>`;
+    const siteBtn = p.site ? `<a class="primary" href="${p.site}" target="_blank" rel="noopener">More info ↗</a>` : '';
+    const terrPill = p.terr ? ` <span class="pill terr">🌿 TERRACE</span>` : '';
+    const catLabel = sec.cat === 'near' ? 'NEAR HOTEL' : 'FOOD &amp; WINE';
+    el.innerHTML =
+      `<h3>${p.emoji} ${p.name} <span class="pill ${p.cat}">${catLabel}</span>${terrPill}</h3>`+
+      `<div class="tagline">${p.tagline}</div>`+
+      `<div class="blurb">${p.blurb}</div>`+
+      `<div class="meta">📍 ${p.addr} · ${p.walk}${p.hours?` · 🕐 ${p.hours}`:''}</div>`+
+      `<div class="links">${siteBtn}${mapBtn}</div>`;
+    grid.appendChild(el);
+  });
+  host.appendChild(grid);
+});
+</script>
+</body>
+</html>
